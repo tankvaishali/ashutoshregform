@@ -1,0 +1,138 @@
+.bg {
+    background-image: linear-gradient(20deg, #c3754112, #cbd8f0e8);
+    /* background: #cbd8f0; */
+    background-size: cover;
+    background-repeat: no-repeat;
+    color: #2a1618;
+    font-size: 20px;
+}
+
+.button {
+    background-image: linear-gradient(#6d6e8a, #6d6e8a);
+}
+
+.span2 {
+    height: 10px;
+    display: none;
+    font-size: 20px;
+}
+
+.span1 {
+    height: 10px;
+    font-size: 12px;
+    display: block;
+}
+
+.fghj {
+    margin-top: 2rem !important
+}
+
+.placehold::placeholder {
+    color: #2a1618;
+    opacity: 3;
+}
+
+.form-control {
+    background: transparent;
+    border: 2px solid #2a16188c;
+
+}
+
+.form-control:focus {
+    background: transparent;
+    border: 2px solid #2a16188c;
+    box-shadow: none;
+}
+
+.form-check-input {
+    border: 2px solid #2a16188c;
+    background-color: #2a16188c;
+
+}
+
+.form-check-input:checked {
+    background-color: #2a16188c;
+    border: 2px solid #2a16188c;
+}
+
+
+.form-check-input:focus {
+    outline: none;
+    border: 2px solid #2a16188c;
+
+    box-shadow: none;
+}
+
+.input-group-text {
+    background: none;
+    border: 2px solid #2a16188c;
+    border-right: none;
+}
+
+.input-group-text {
+    color: #2a16188c;
+}
+
+.custom-select {
+    border: 2px solid #2a16188c;
+    background: none;
+
+}
+
+.css-lj7tfv-control {
+    background: none !important;
+    border: 2px solid #2a16188c !important;
+    border-radius: 0 !important;
+    /* padding: 8px; */
+    height: 0 !important;
+}
+
+.css-13cymwt-control {
+    background: none !important;
+    border: none !important;
+    padding: 5px !important;
+
+}
+
+.css-13cymwt-control:focus {
+    background: none !important;
+    border: none !important;
+
+}
+
+.css-t3ipsp-control {
+    background: none !important;
+    border: none !important;
+    padding: 5px !important;
+    box-shadow: none !important;
+}
+
+.css-t3ipsp-control:hover {
+    background: none !important;
+    border: dark !important;
+    box-shadow: none;
+    padding: 5px !important;
+
+}
+
+.css-t3ipsp-control:focus {
+    background: none !important;
+    border: dark !important;
+    box-shadow: none;
+
+}
+
+.css-1jqq78o-placeholder {
+    color: #2a1618 !important;
+    opacity: 3;
+}
+
+
+.shadowon {
+    box-shadow: 4px 4px 19px black;
+}
+
+.bgborder {
+    border: 7px solid #6d6e8a;
+    box-shadow: 6px 6px 20px #6d6e8a;
+}
