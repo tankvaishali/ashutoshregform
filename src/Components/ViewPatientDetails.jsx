@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Table, Button, Card } from 'react-bootstrap';
 import { BiEdit, BiMaleFemale } from 'react-icons/bi';
-import { TextField } from '@material-ui/core';
+// import { TextField } from '@material-ui/core';
 import { MdBloodtype, MdDevices, MdOutlineAlternateEmail } from 'react-icons/md';
 import { FaAddressCard, FaBirthdayCake, FaDiagnoses } from 'react-icons/fa';
 import { FcContacts } from 'react-icons/fc';
@@ -261,12 +261,12 @@ function ViewPatientDetails() {
                                                 <tr>
                                                     {console.log(newRow)}
                                                     <td>
-                                                        <TextField type="date" className='display-4' value={newRow.date} onChange={(e) => handleChange(e, 'date')} />
+                                                        <input type="date" className='display-4' value={newRow.date} onChange={(e) => handleChange(e, 'date')} />
                                                     </td>
-                                                    <td><TextField type="number" value={newRow.file_charge} onChange={(e) => handleChange(e, 'file_charge')} /></td>
-                                                    <td><TextField type="number" value={newRow.total_charge_amount} onChange={(e) => handleChange(e, 'total_charge_amount')} /></td>
-                                                    <td><TextField type="number" value={newRow.paid_amount} onChange={(e) => handleChange(e, 'paid_amount')} /></td>
-                                                    <td><TextField type="number" disabled value={newRow.pendingAmount} onChange={(e) => handleChange(e, 'pendingAmount')} /></td>
+                                                    <td><input type="number" value={newRow.file_charge} onChange={(e) => handleChange(e, 'file_charge')} /></td>
+                                                    <td><input type="number" value={newRow.total_charge_amount} onChange={(e) => handleChange(e, 'total_charge_amount')} /></td>
+                                                    <td><input type="number" value={newRow.paid_amount} onChange={(e) => handleChange(e, 'paid_amount')} /></td>
+                                                    <td><input type="number" disabled value={newRow.pendingAmount} onChange={(e) => handleChange(e, 'pendingAmount')} /></td>
                                                     <td><Button onClick={() => handleSave()} variant="dark">Save</Button></td>
                                                 </tr>
                                             )}

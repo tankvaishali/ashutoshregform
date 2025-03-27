@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import MUIDataTable from "mui-datatables";
-import { ThemeProvider, createTheme } from '@material-ui/core/styles';
 import { CacheProvider } from '@emotion/react';
 import createCache from '@emotion/cache';
 import '../assets/CSS//DataTable.css';
@@ -133,7 +132,6 @@ function DataTable() {
   return (
     <div className='container-fluid bg text-start'>
       <CacheProvider value={muiCache}>
-        <ThemeProvider theme={createTheme()}></ThemeProvider>
         <MUIDataTable
           title={<CustomTableTitle />}
           data={State}
