@@ -27,7 +27,7 @@ function Mainsection() {
         email: '',
         diagnosis: '',
         devices: '',
-        Hosptal: '',
+        Hospital: '',
         Doctor: '',
         totalBill: '',
         paidAmount: '',
@@ -217,7 +217,7 @@ function Mainsection() {
     const handleDiagnosisChange = selectedOption => {
         const newValues = {
             ...patientInfo,
-            diagnosis: selectedOption?.id
+            diagnosis: selectedOption ? selectedOption.value : ''
         };
         setPatientInfo(newValues);
 
@@ -231,7 +231,7 @@ function Mainsection() {
     const handleDeviceChange = selectedOption => {
         const newValues = {
             ...patientInfo,
-            devices: selectedOption?.id
+            devices: selectedOption ? selectedOption.value : ''
         };
         setPatientInfo(newValues);
 
@@ -259,13 +259,13 @@ function Mainsection() {
     const handleHospitalChange = selectedOption => {
         const newValues = {
             ...patientInfo,
-            Hosptal: selectedOption ? selectedOption.value : ''
+            Hospital: selectedOption ? selectedOption.value : ''
         };
         setPatientInfo(newValues);
 
         const newErrors = { ...errormsg };
         if (selectedOption) {
-            delete newErrors.Hosptal;
+            delete newErrors.Hospital;
             seterrormsg(newErrors);
         }
     };
@@ -275,32 +275,36 @@ function Mainsection() {
         value: diagnosis.diagnosis_name,
         id: diagnosis.id
     }));
-    const options1 = Device.map((diagnosis) => ({
-        label: diagnosis.device_name,
-        value: diagnosis.device_name,
-        id: diagnosis.id
+
+    const options1 = Device.map((device) => ({
+        label: device.device_name,
+        value: device.device_name,
+        id: device.id
     }));
-    const options3 = DoctorName.map((diagnosis) => ({
-        label: diagnosis.name,
-        value: diagnosis.name,
-        id: diagnosis.id
+    const options3 = DoctorName.map((doctor) => ({
+        label: doctor.name,
+        value: doctor.name,
+        id: doctor.id
     }));
-    const options4 = Hospital.map((diagnosis) => ({
-        label: diagnosis.name,
-        value: diagnosis.name,
-        id: diagnosis.id
+    const options4 = Hospital.map((hospital) => ({
+        label: hospital.name,
+        value: hospital.name,
+        id: hospital.id
     }));
 
     //Regester Patient Data
     const ApiCall = () => {
         try {
-            axios.post('http://localhost:8000/api/register-patient/', {
-                first_name: patientInfo.name.first_name,
-                middle_name: patientInfo.name.middle_name,
-                last_name: patientInfo.name.middle_name,
+            axios.post('https://aashutosh-backend.vercel.app/add-patient', {
+                name: {
+                    first_name: patientInfo.name.first_name,
+                    middle_name: patientInfo.name.middle_name,
+                    last_name: patientInfo.name.last_name,
+                },
+                date_joined: new Date().toISOString().substring(0, 10),
                 email: patientInfo.email,
                 phone_number: "+91" + patientInfo.phone_number,
-                address: {
+                add: {
                     street: patientInfo.street,
                     city: patientInfo.city,
                     zip_code: +patientInfo.Zipcode,
@@ -310,6 +314,8 @@ function Mainsection() {
                 age: patientInfo.age,
                 diagnosis_name: patientInfo.diagnosis,
                 device_name: patientInfo.devices,
+                doctor_name: patientInfo.Doctor,
+                Hospital_name: patientInfo.Hospital,
                 gender_identity: patientInfo.name.Title,
                 blood_group: patientInfo.bloodGroup,
                 patient_payment: {
@@ -389,8 +395,8 @@ function Mainsection() {
             newErrormsg.Doctor = "Please it's required";
         }
 
-        if (!patientInfo.Hosptal) {
-            newErrormsg.Hosptal = "Please it's required";
+        if (!patientInfo.Hospital) {
+            newErrormsg.Hospital = "Please it's required";
         }
 
         if (isValid && Object.keys(newErrormsg).length === 0) {
@@ -469,10 +475,11 @@ function Mainsection() {
     useEffect(() => {
 
         //Devices_Data
-        axios.get(server + 'filter-device-data/')
+        // axios.get(server + 'filter-device-data/')
+        axios.get("https://aashutosh-backend.vercel.app/devices")
             .then((response) => {
-                console.log(response.data.data);
-                setDevice(response.data.data);
+                // console.log(response.data);
+                setDevice(response.data);
             })
             .catch(error => {
                 console.log(error);
@@ -480,30 +487,32 @@ function Mainsection() {
 
 
         //Diagnosis_Data
-        axios.get(server + 'filter-diagnosis-data/')
+         axios.get("https://aashutosh-backend.vercel.app/diagnosis")
             .then(function (response) {
-                setArray(response.data.data);
-                console.log(response.data.data);
+                setArray(response.data);
+                // console.log(response.data);
             })
             .catch(function (error) {
                 console.log(error);
             })
 
         //Doctor_Data
-        axios.get(server + 'filter-doctor-data/')
+        // axios.get(server + 'filter-doctor-data/')
+        axios.get("https://aashutosh-backend.vercel.app/doctor")
             .then(function (response) {
-                setDoctor(response.data.data);
-                console.log(response.data.data);
+                setDoctor(response.data);
+                // console.log(response.data);
             })
             .catch(function (error) {
                 console.log(error);
             })
 
         //Hospital_Data
-        axios.get(server + 'filter-hospital-data/')
+        // axios.get(server + 'filter-hospital-data/')
+        axios.get("https://aashutosh-backend.vercel.app/hospital")
             .then(function (response) {
-                console.log(response.data.data);
-                setHospital(response.data.data);
+                // console.log(response.data);
+                setHospital(response.data);
             })
             .catch(function (error) {
                 console.log(error);
@@ -513,7 +522,7 @@ function Mainsection() {
     }, []);
 
     const handleReset = () => {
-        window.location.reload();
+        // window.location.reload();
     }
 
 
@@ -695,14 +704,14 @@ function Mainsection() {
                                     <Select
                                         name='diagnosis'
                                         className="flex-grow-1 custom-select p-1 placehold col fs-6 rounded-end"
-                                        value={options4.find(option => option.value === patientInfo.Hosptal)}
+                                        value={options4.find(option => option.value === patientInfo.Hospital)}
                                         onChange={handleHospitalChange}
                                         onInputChange={handleInputChange3}
                                         options={options4}
                                         placeholder="Select Hospital"
                                     />
                                 </InputGroup>
-                                <div className={errormsg ? "span1 text-danger fs-6" : "span2"}>{errormsg.Hosptal}</div>
+                                <div className={errormsg ? "span1 text-danger fs-6" : "span2"}>{errormsg.Hospital}</div>
                             </Form.Group>
                         </div>
 
@@ -726,11 +735,11 @@ function Mainsection() {
                         </div>
 
                         <div className='row align-items-center justify-content-evenly'>
-                            {display === true ?
+                            {/* {display === true ?
                                 <Button variant="dark" type="" onClick={handleReset} className="w-25 p-3 shadowon">Reset Form<GrPowerReset /></Button>
-                                :
-                                <Button variant="dark" type="submit" className="w-25 p-3 shadowon">Submit</Button>
-                            }
+                                : */}
+                            <Button variant="dark" type="submit" className="w-25 p-3 shadowon">Submit</Button>
+                            {/* } */}
                             <Button variant="dark" type="" onClick={PrintButton} className="w-25 p-3 shadowon" disabled={!display}>Print <FaPrint /></Button>
 
                         </div>
