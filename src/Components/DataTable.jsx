@@ -31,7 +31,7 @@ function DataTable() {
 
   const columns = [
     {
-      field: "date",
+      field: "date_joined",
       headerName: "Date",
       width: 120,
       renderCell: (params) => {
