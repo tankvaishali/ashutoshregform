@@ -20,11 +20,19 @@ function ViewPatientDetails() {
     let [newRow, setNewRow] = useState({});
     const [adding, setAdding] = useState(false);
 
+    const [loading, setLoading] = useState(true);
+
     useEffect(() => {
-        getdata()
-        DiognoseName()
-        DeviceName()
-    }, [])
+        setLoading(true);
+        axios.get("https://aashutosh-backend.vercel.app/edit/" + dataId)
+            .then(response => setState(response.data.data))
+            .catch(error => console.error(error))
+            .finally(() => setLoading(false));
+        getdata();
+        DiognoseName();
+        DeviceName();
+    }, []);
+
 
     useEffect(() => {
         axios.get("https://aashutosh-backend.vercel.app/edit/" + dataId)
@@ -57,6 +65,7 @@ function ViewPatientDetails() {
     };
 
     const handleSave = () => {
+        setLoading(true)
         setRows([newRow, ...rows]);
         setAdding(false);
 
@@ -66,6 +75,8 @@ function ViewPatientDetails() {
             axios.post('https://aashutosh-backend.vercel.app/patient_payment', { Patient_id: dataId, data: [newRow] })
                 .then(function (response) {
                     getdata();
+                    setLoading(false)
+
                 })
                 .catch(function (error) {
                     console.log("error", error);
@@ -80,6 +91,7 @@ function ViewPatientDetails() {
             axios.put("https://aashutosh-backend.vercel.app/payment-update/" + newRow._id, newRow)
                 .then(function (response) {
                     getdata();
+                    setLoading(false)
                     console.log(response);
                 })
                 .catch(function (error) {
@@ -156,6 +168,16 @@ function ViewPatientDetails() {
     const date = new Date(dateString);
 
     const formattedDate = `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`;
+
+
+    if (loading) {
+        return (
+            <div className="d-flex justify-content-center align-items-center" style={{ height: "100vh" }}>
+                {/* <Spinner animation="border" variant="primary" /> */}
+                <img src="https://media.tenor.com/1s1_eaP6BvgAAAAC/rainbow-spinner-loading.gif" alt="" className='img-fluid bg-white' width={150} />
+            </div>
+        );
+    }
 
     return (
         <div className='bg py-3'>

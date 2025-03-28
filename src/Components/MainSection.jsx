@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import '../assets/CSS/MainSection.css'
+import '../assets/CSS/MainSection.css';
 import { Form, Button, InputGroup, FormControl, FormGroup, Row, Col } from 'react-bootstrap';
 import { IoMail } from 'react-icons/io5';
 import { HiDeviceMobile } from 'react-icons/hi';
@@ -7,31 +7,15 @@ import { BsCashCoin, BsCurrencyDollar, BsDropletHalf } from 'react-icons/bs';
 import { CiStethoscope } from 'react-icons/ci';
 import { FaHospital, FaPrint, FaUserMd } from 'react-icons/fa';
 import axios from 'axios';
-import Select from 'react-select'
+import Select from 'react-select';
 import { MdAir } from 'react-icons/md';
-import { GrPowerReset } from 'react-icons/gr';
 
 function Mainsection() {
 
     const [patientInfo, setPatientInfo] = useState({
-        id: Date.now(),
-        name: { Title: '', first_name: '', middle_name: '', last_name: '', },
-        street: '',
-        city: '',
-        state: '',
-        country: '',
-        Zipcode: '',
-        age: '',
-        bloodGroup: '',
-        phone_number: '',
-        email: '',
-        diagnosis: '',
-        devices: '',
-        Hospital: '',
-        Doctor: '',
-        totalBill: '',
-        paidAmount: '',
-        entryDate: new Date().toISOString().substring(0, 10) // Today's date in YYYY-MM-DD format
+        id: Date.now(), name: { Title: '', first_name: '', middle_name: '', last_name: '', },
+        street: '', city: '', state: '', country: '', Zipcode: '', age: '', bloodGroup: '', phone_number: '', email: '', diagnosis: '', devices: '',
+        Hospital: '', Doctor: '', totalBill: '', paidAmount: '', entryDate: new Date().toISOString().substring(0, 10) // Today's date in YYYY-MM-DD format
     });
     const [array, setArray] = useState([])
     const [Device, setDevice] = useState([])
@@ -487,7 +471,7 @@ function Mainsection() {
 
 
         //Diagnosis_Data
-         axios.get("https://aashutosh-backend.vercel.app/diagnosis")
+        axios.get("https://aashutosh-backend.vercel.app/diagnosis")
             .then(function (response) {
                 setArray(response.data);
                 // console.log(response.data);

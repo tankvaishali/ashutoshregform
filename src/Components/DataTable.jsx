@@ -1,8 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { DataGrid } from "@mui/x-data-grid";
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import { Table } from 'react-bootstrap';
+import { FaCloudDownloadAlt } from 'react-icons/fa';
+import { HiViewColumns } from 'react-icons/hi2';
+import { MdFilterList, MdPrint } from 'react-icons/md';
+import * as XLSX from "xlsx";
 import "../assets/CSS/DataTable.css";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { useNavigate } from 'react-router-dom';
 
 const CustomTableTitle = () => (
   <div>
@@ -17,7 +21,95 @@ const CustomTableTitle = () => (
 );
 
 function DataTable() {
-  const server = process.env.REACT_APP_BASE_URL;
+  const [data, setData] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [isOpen, setIsOpen] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const [searchDate, setSearchDate] = useState("");
+  const [searchName, setSearchName] = useState("");
+  const [searchEmail, setSearchEmail] = useState("");
+  const [searchPhone, setSearchPhone] = useState("");
+  const [searchBloodGroup, setSearchBloodGroup] = useState("");
+  const [selectedColumns, setSelectedColumns] = useState([
+    "Date", "Name", "E-mail", "Phone Number", "Address", "Blood Group", "Gender", "Actions"
+  ]);
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setLoading(true);
+
+    axios
+      .get("https://aashutosh-backend.vercel.app/getpatient")
+      .then((response) => setData(response.data))
+      .catch((error) => console.error("Error fetching data:", error))
+      .finally(() => setLoading(false));
+    console.log(data);
+  }, []);
+
+  const columns = [
+    { key: "date_joined", label: "Date" },
+    { key: "full_name", label: "Name" },
+    { key: "email", label: "E-mail" },
+    { key: "phone_number", label: "Phone Number" },
+    { key: "address", label: "Address" },
+    { key: "blood_group", label: "Blood Group" },
+    { key: "gender_identity", label: "Gender" },
+    { key: "actions", label: "Actions" },
+  ];
+
+  const handleCheckboxChange = (columnLabel) => {
+    setSelectedColumns((prev) =>
+      prev.includes(columnLabel) ? prev.filter((col) => col !== columnLabel) : [...prev, columnLabel]
+    );
+  };
+
+  const handleItemsPerPageChange = (e) => {
+    setItemsPerPage(parseInt(e.target.value));
+    setCurrentPage(1);
+  };
+
+  const filteredData = data.filter((item) => {
+    return (
+      (searchDate === "" || item.date_joined.includes(searchDate)) &&
+      (searchName === "" || item.full_name.toLowerCase().includes(searchName.toLowerCase())) &&
+      (searchEmail === "" || item.email.toLowerCase().includes(searchEmail.toLowerCase())) &&
+      (searchPhone === "" || item.phone_number.includes(searchPhone)) &&
+      (searchBloodGroup === "" || item.blood_group.toLowerCase().includes(searchBloodGroup.toLowerCase()))
+    );
+  });
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredData.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+
+  const exportToCSV = () => {
+    const ws = XLSX.utils.json_to_sheet(data);
+    const csv = XLSX.utils.sheet_to_csv(ws);
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "TableData.csv";
+    link.click();
+  };
+
+  const printTable = () => {
+    const printWindow = window.open('', '', 'width=800,height=600');
+    printWindow.document.write('<html><head><title>Print Table</title></head><body>');
+    printWindow.document.write('<table border="1" style="width:100%; border-collapse:collapse; text-align:center;">');
+    printWindow.document.write('<thead><tr><th>Date</th><th>Name</th><th>E-mail</th><th>Phone Number</th><th>Address</th><th>Blood Group</th><th>Gender</th></tr></thead>');
+    printWindow.document.write('<tbody>');
+    currentItems.forEach((item, index) => {
+      printWindow.document.write(`<tr><td>${item.date_joined}</td><td>${item.full_name}</td><td>${item.email}</td><td>${item.phone_number}</td><td>${item.address}</td><td>${item.blood_group}</td><td>${item.gender_identity}</td></tr>`);
+    });
+    printWindow.document.write('</tbody></table>');
+    printWindow.document.write('</body></html>');
+    printWindow.document.close();
+    printWindow.print();
+  };
+
   let navigate = useNavigate();
 
   const ViewPatientDetails = (id) => {
@@ -25,69 +117,148 @@ function DataTable() {
       navigate("/login");
     } else {
       navigate("/ViewPatientDetails");
-      localStorage.setItem("ViewPatientDetails", id);
     }
+    localStorage.setItem("ViewPatientDetails", id);
   };
 
-  const columns = [
-    {
-      field: "date_joined",
-      headerName: "Date",
-      width: 120,
-      renderCell: (params) => {
-        const date = new Date(params.value);
-        return `${date.getDate().toString().padStart(2, "0")}-${(date.getMonth() + 1)
-          .toString()
-          .padStart(2, "0")}-${date.getFullYear()}`;
-      },
-    },
-    {
-      field: "full_name",
-      headerName: "Name",
-      width: 200,
-      renderCell: (params) =>
-        typeof params.value === "object"
-          ? Object.values(params.value).join(" ")
-          : params.value,
-    },
-    { field: "email", headerName: "Email", width: 200 },
-    { field: "phone_number", headerName: "Phone Number", width: 150 },
-    { field: "address", headerName: "Address", width: 200 },
-    { field: "blood_group", headerName: "Blood Group", width: 120 },
-    { field: "gender_identity", headerName: "Gender", width: 120 },
-    {
-      field: "_id",
-      headerName: "View",
-      width: 100,
-      renderCell: (params) => (
-        <button
-          type="button"
-          className="border border-0 btn btn-light rounded-0"
-          onClick={() => ViewPatientDetails(params.value)}
-        >
-          View
-        </button>
-      ),
-    },
-  ];
-
-  const [state, setState] = useState([]);
-
-  useEffect(() => {
-    axios.get("https://aashutosh-backend.vercel.app/getpatient").then((response) => {
-      setState(response.data);
-    });
-  }, []);
+  if (loading) {
+    return (
+      <div className="d-flex justify-content-center align-items-center" style={{ height: "100vh" }}>
+        <img src="https://media.tenor.com/1s1_eaP6BvgAAAAC/rainbow-spinner-loading.gif" alt="" className='img-fluid bg-white' width={150} />
+      </div>
+    );
+  }
 
   return (
-    <div className="container-fluid bg text-start" style={{ height: 500, width: "100%" }}>
+    <div className="container-fluid bg text-start" >
       <h2><CustomTableTitle /></h2>
-      <DataGrid
-        rows={state.map((row, index) => ({ id: index, ...row }))}
-        columns={columns}
-        pageSize={5}
-        checkboxSelection
-      />
+      <div className='container my-5'>
+        <div className=''>
+          <div className="d-flex justify-content-end mb-3">
+            <div className="fs-2" onClick={exportToCSV}>
+              <FaCloudDownloadAlt />
+            </div>
+
+            <div className="fs-2 ms-2" onClick={printTable}>
+              <MdPrint />
+            </div>
+
+            <div className="position-relative">
+              <div className="fs-2 ms-2" onClick={() => setIsOpen(!isOpen)} style={{ cursor: "pointer" }}>
+                <HiViewColumns />
+              </div>
+              {isOpen && (
+                <div className="bg-white shadow rounded p-3 position-fixed end-0" style={{ minWidth: "170px", right: "0" }}>
+                  {columns.map((column, index) => (
+                    <div key={index} className="my-1">
+                      <input
+                        type="checkbox"
+                        checked={selectedColumns.includes(column.label)}
+                        onChange={() => handleCheckboxChange(column.label)}
+                      />
+                      {column.label}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <div className="position-relative">
+              <div className="fs-2 ms-2" onClick={() => setIsVisible(!isVisible)} style={{ cursor: "pointer" }}>
+                <MdFilterList />
+              </div>
+              {isVisible && (
+                <div className="position-fixed bg-white end-0 shadow rounded p-3" style={{ width: "100%", maxWidth: "350px", top: "100px", zIndex: 1050, right: "0" }}>
+                  <div className="d-flex gap-3">
+                    <div className="w-50">
+                      <label className="d-block">Date</label>
+                      <input type="text" className="w-100 p-1 rounded mt-1" style={{ outline: "none" }} value={searchDate} onChange={(e) => setSearchDate(e.target.value)} />
+                    </div>
+                    <div className="w-50">
+                      <label className="d-block">Name</label>
+                      <input type="text" className="w-100 p-1 rounded mt-1" style={{ outline: "none" }} value={searchName} onChange={(e) => setSearchName(e.target.value)} />
+                    </div>
+                  </div>
+                  <div className="d-flex gap-3 mt-2">
+                    <div className="w-50">
+                      <label className="d-block">E-mail</label>
+                      <input type="email" className="w-100 p-1 rounded mt-1" style={{ outline: "none" }} value={searchEmail} onChange={(e) => setSearchEmail(e.target.value)} />
+                    </div>
+                    <div className="w-50">
+                      <label className="d-block">Phone Number</label>
+                      <input type="tel" className="w-100 p-1 rounded mt-1" style={{ outline: "none" }} value={searchPhone} onChange={(e) => setSearchPhone(e.target.value)} />
+                    </div>
+                  </div>
+                  <div className="d-flex gap-3 mt-2">
+                    <div className="w-50">
+                      <label className="d-block">Blood Group</label>
+                      <input type="text" className="w-100 p-1 rounded mt-1" style={{ outline: "none" }} value={searchBloodGroup} onChange={(e) => setSearchBloodGroup(e.target.value)} />
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+        <div className="table-responsive">
+          <Table striped bordered className="border border-dark text-center">
+            <thead className="">
+              <tr className='text-center'>
+                {columns.map((col, index) =>
+                  selectedColumns.includes(col.label) && <th key={index}>{col.label}</th>
+                )}
+              </tr>
+            </thead>
+
+            <tbody>
+              {currentItems.length > 0 ? (
+                currentItems.map((item, index) => (
+                  <tr key={index} className="text-center">
+                    {selectedColumns.includes("Date") && <td style={{ width: "12%" }}>{item.date_joined}</td>}
+                    {selectedColumns.includes("Name") && <td style={{ width: "10%" }}>{item.full_name}</td>}
+                    {selectedColumns.includes("E-mail") && <td style={{ width: "13%" }}>{item.email}</td>}
+                    {selectedColumns.includes("Phone Number") && <td style={{ width: "13%" }}>{item.phone_number}</td>}
+                    {selectedColumns.includes("Address") && <td style={{ width: "27%" }}>{item.address}</td>}
+                    {selectedColumns.includes("Blood Group") && <td style={{ width: "12%" }}>{item.blood_group}</td>}
+                    {selectedColumns.includes("Gender") && <td style={{ width: "5%" }}>{item.gender_identity}</td>}
+                    {selectedColumns.includes("Actions") && (
+                      <td style={{ width: "8%" }}>
+                        <button type="button" className="btn btn-success" onClick={() => ViewPatientDetails(item._id)}>View</button>
+                      </td>
+                    )}
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={selectedColumns.length} className="text-center">No Data Found!</td>
+                </tr>
+              )}
+            </tbody>
+          </Table>
+        </div>
+
+        <div className='d-flex'>
+          <div className="d-flex align-items-center">
+            <label className="me-2">Show Entries</label>
+            <select className="form-select shadow-none me-3 w-auto border border-1 border-dark d-inline-block" value={itemsPerPage} onChange={handleItemsPerPageChange}>
+              <option value="10">10</option>
+              <option value="100">100</option>
+              <option value="500">500</option>
+              <option value="1000">1000</option>
+            </select>
+          </div>
+
+          <div className="d-flex ms-auto align-items-center">
+            <button className="btn btn-dark me-2" onClick={() => setCurrentPage(currentPage - 1)} disabled={currentPage === 1}>
+              &lt;
+            </button>
+            <span>Page {currentPage} of {totalPages}</span>
+            <button className="btn btn-dark ms-2" onClick={() => setCurrentPage(currentPage + 1)} disabled={currentPage === totalPages}>
+              &gt;
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

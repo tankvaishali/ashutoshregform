@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { Form, InputGroup } from 'react-bootstrap'
+import React, { useState } from 'react';
+import { Form, InputGroup } from 'react-bootstrap';
 import { CgLogIn } from 'react-icons/cg';
 import { RiLockPasswordFill } from 'react-icons/ri';
 import { useNavigate } from 'react-router-dom';
