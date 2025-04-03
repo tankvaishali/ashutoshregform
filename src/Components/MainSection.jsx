@@ -277,9 +277,9 @@ function Mainsection() {
     }));
 
     //Regester Patient Data
-    const ApiCall = () => {
+    const ApiCall = async () => {
         try {
-            axios.post('https://aashutosh-backend.vercel.app/add-patient', {
+            await axios.post('https://aashutosh-backend.vercel.app/add-patient', {
                 name: {
                     first_name: patientInfo.name.first_name,
                     middle_name: patientInfo.name.middle_name,
@@ -313,13 +313,15 @@ function Mainsection() {
                 })
                 .catch(function (error) {
                     console.log(error);
+                    alert("Phone number and E-mail already exist.");
                 });
         } catch (error) {
             console.log(error);
         }
     }
+
     // Submit Regester Data
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         let isValid = true;
@@ -384,7 +386,7 @@ function Mainsection() {
         }
 
         if (isValid && Object.keys(newErrormsg).length === 0) {
-            ApiCall()
+            await ApiCall()
             setArray(prevArray => [...prevArray, patientInfo]);
             setDisplay(true);
 

@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Table } from 'react-bootstrap';
+import { Button, Table } from 'react-bootstrap';
 import { FaCloudDownloadAlt } from 'react-icons/fa';
 import { HiViewColumns } from 'react-icons/hi2';
 import { MdFilterList, MdPrint } from 'react-icons/md';
@@ -8,19 +8,8 @@ import * as XLSX from "xlsx";
 import "../assets/CSS/DataTable.css";
 import { useNavigate } from 'react-router-dom';
 
-const CustomTableTitle = () => (
-  <div>
-    <div className="row align-items-center justify-content-sm-start justify-content-center p-3 ms-sm-5 ms-0">
-      <img
-        src={require("../assets/image/Ashutosh2.png")}
-        alt=""
-        className="p-2 bg2 image"
-      />
-    </div>
-  </div>
-);
-
 function DataTable() {
+
   const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
@@ -34,18 +23,17 @@ function DataTable() {
   const [selectedColumns, setSelectedColumns] = useState([
     "Date", "Name", "E-mail", "Phone Number", "Address", "Blood Group", "Gender", "Actions"
   ]);
-
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     setLoading(true);
-
     axios
       .get("https://aashutosh-backend.vercel.app/getpatient")
       .then((response) => setData(response.data))
       .catch((error) => console.error("Error fetching data:", error))
       .finally(() => setLoading(false));
     console.log(data);
+
   }, []);
 
   const columns = [
@@ -129,12 +117,30 @@ function DataTable() {
     );
   }
 
+  const handleClosePopup = (e) => {
+    if (e.target.id === "overlay") {
+      setIsOpen(false);
+    }
+  };
+
+  const handleCloseFiter = (e) => {
+    if (e.target.id === "overlayFilter") {
+      setIsVisible(false);
+    }
+  };
+
   return (
-    <div className="container-fluid bg text-start" >
-      <h2><CustomTableTitle /></h2>
-      <div className='container my-5'>
-        <div className=''>
-          <div className="d-flex justify-content-end mb-3">
+    <div className="bg text-start">
+      <div className='container py-5'>
+        <div className='d-flex justify-content-between'>
+          <div>
+            <img
+              src={require("../assets/image/Ashutosh2.png")}
+              alt=""
+              className="p-2 bg2 image"
+            />
+          </div>
+          <div className="d-flex justify-content-end align-content-center align-items-end mb-3">
             <div className="fs-2" onClick={exportToCSV}>
               <FaCloudDownloadAlt />
             </div>
@@ -148,17 +154,19 @@ function DataTable() {
                 <HiViewColumns />
               </div>
               {isOpen && (
-                <div className="bg-white shadow rounded p-3 position-fixed end-0" style={{ minWidth: "170px", right: "0" }}>
-                  {columns.map((column, index) => (
-                    <div key={index} className="my-1">
-                      <input
-                        type="checkbox"
-                        checked={selectedColumns.includes(column.label)}
-                        onChange={() => handleCheckboxChange(column.label)}
-                      />
-                      {column.label}
-                    </div>
-                  ))}
+                <div className="position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center bg-dark bg-opacity-50" onClick={handleClosePopup} id="overlay">
+                  <div className="shadow rounded p-3" style={{ minWidth: "200px", background: "whitesmoke", zIndex: "10" }}>
+                    {columns.map((column, index) => (
+                      <div key={index} className="my-1">
+                        <input
+                          type="checkbox"
+                          checked={selectedColumns.includes(column.label)}
+                          onChange={() => handleCheckboxChange(column.label)}
+                        />
+                        <span className='ms-2' style={{ fontSize: "15px" }}>{column.label}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               )}
             </div>
@@ -168,31 +176,33 @@ function DataTable() {
                 <MdFilterList />
               </div>
               {isVisible && (
-                <div className="position-fixed bg-white end-0 shadow rounded p-3" style={{ width: "100%", maxWidth: "350px", top: "100px", zIndex: 1050, right: "0" }}>
-                  <div className="d-flex gap-3">
-                    <div className="w-50">
-                      <label className="d-block">Date</label>
-                      <input type="text" className="w-100 p-1 rounded mt-1" style={{ outline: "none" }} value={searchDate} onChange={(e) => setSearchDate(e.target.value)} />
+                <div className="position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center bg-dark bg-opacity-50" onClick={handleCloseFiter} id="overlayFilter">
+                  <div className="shadow rounded p-4" style={{ minWidth: "200px", background: "whitesmoke", zIndex: "10", fontSize: "15px" }}>
+                    <div className="d-flex gap-3">
+                      <div className="w-50">
+                        <label className="d-block">Date</label>
+                        <input type="text" className="w-100 ps-1 text-secondary rounded mt-1" style={{ outline: "none" }} value={searchDate} onChange={(e) => setSearchDate(e.target.value)} />
+                      </div>
+                      <div className="w-50">
+                        <label className="d-block">Name</label>
+                        <input type="text" className="w-100 ps-1 text-secondary rounded mt-1" style={{ outline: "none" }} value={searchName} onChange={(e) => setSearchName(e.target.value)} />
+                      </div>
                     </div>
-                    <div className="w-50">
-                      <label className="d-block">Name</label>
-                      <input type="text" className="w-100 p-1 rounded mt-1" style={{ outline: "none" }} value={searchName} onChange={(e) => setSearchName(e.target.value)} />
+                    <div className="d-flex gap-3 mt-2">
+                      <div className="w-50">
+                        <label className="d-block">E-mail</label>
+                        <input type="email" className="w-100 ps-1 text-secondary rounded mt-1" style={{ outline: "none" }} value={searchEmail} onChange={(e) => setSearchEmail(e.target.value)} />
+                      </div>
+                      <div className="w-50">
+                        <label className="d-block">Phone Number</label>
+                        <input type="tel" className="w-100 ps-1 text-secondary rounded mt-1" style={{ outline: "none" }} value={searchPhone} onChange={(e) => setSearchPhone(e.target.value)} />
+                      </div>
                     </div>
-                  </div>
-                  <div className="d-flex gap-3 mt-2">
-                    <div className="w-50">
-                      <label className="d-block">E-mail</label>
-                      <input type="email" className="w-100 p-1 rounded mt-1" style={{ outline: "none" }} value={searchEmail} onChange={(e) => setSearchEmail(e.target.value)} />
-                    </div>
-                    <div className="w-50">
-                      <label className="d-block">Phone Number</label>
-                      <input type="tel" className="w-100 p-1 rounded mt-1" style={{ outline: "none" }} value={searchPhone} onChange={(e) => setSearchPhone(e.target.value)} />
-                    </div>
-                  </div>
-                  <div className="d-flex gap-3 mt-2">
-                    <div className="w-50">
-                      <label className="d-block">Blood Group</label>
-                      <input type="text" className="w-100 p-1 rounded mt-1" style={{ outline: "none" }} value={searchBloodGroup} onChange={(e) => setSearchBloodGroup(e.target.value)} />
+                    <div className="d-flex gap-3 mt-2">
+                      <div className="w-50">
+                        <label className="d-block">Blood Group</label>
+                        <input type="text" className="w-100 ps-1 text-secondary rounded mt-1" style={{ outline: "none" }} value={searchBloodGroup} onChange={(e) => setSearchBloodGroup(e.target.value)} />
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -200,12 +210,12 @@ function DataTable() {
             </div>
           </div>
         </div>
-        <div className="table-responsive">
+        <div className="table-responsive my-3">
           <Table striped bordered className="border border-dark text-center">
             <thead className="">
               <tr className='text-center'>
                 {columns.map((col, index) =>
-                  selectedColumns.includes(col.label) && <th key={index}>{col.label}</th>
+                  selectedColumns.includes(col.label) && <th className='fs-6' key={index}>{col.label}</th>
                 )}
               </tr>
             </thead>
@@ -214,23 +224,23 @@ function DataTable() {
               {currentItems.length > 0 ? (
                 currentItems.map((item, index) => (
                   <tr key={index} className="text-center">
-                    {selectedColumns.includes("Date") && <td style={{ width: "12%" }}>{item.date_joined}</td>}
-                    {selectedColumns.includes("Name") && <td style={{ width: "10%" }}>{item.full_name}</td>}
-                    {selectedColumns.includes("E-mail") && <td style={{ width: "13%" }}>{item.email}</td>}
-                    {selectedColumns.includes("Phone Number") && <td style={{ width: "13%" }}>{item.phone_number}</td>}
-                    {selectedColumns.includes("Address") && <td style={{ width: "27%" }}>{item.address}</td>}
-                    {selectedColumns.includes("Blood Group") && <td style={{ width: "12%" }}>{item.blood_group}</td>}
-                    {selectedColumns.includes("Gender") && <td style={{ width: "5%" }}>{item.gender_identity}</td>}
+                    {selectedColumns.includes("Date") && <td style={{ fontSize: "15px", width: "12%" }}>{item.date_joined}</td>}
+                    {selectedColumns.includes("Name") && <td style={{ fontSize: "15px", width: "10%" }}>{item.full_name}</td>}
+                    {selectedColumns.includes("E-mail") && <td style={{ fontSize: "15px", width: "13%" }}>{item.email}</td>}
+                    {selectedColumns.includes("Phone Number") && <td style={{ fontSize: "15px", width: "13%" }}>{item.phone_number}</td>}
+                    {selectedColumns.includes("Address") && <td style={{ fontSize: "15px", width: "27%" }}>{item.address}</td>}
+                    {selectedColumns.includes("Blood Group") && <td style={{ fontSize: "15px", width: "12%" }}>{item.blood_group}</td>}
+                    {selectedColumns.includes("Gender") && <td style={{ fontSize: "15px", width: "5%" }}>{item.gender_identity}</td>}
                     {selectedColumns.includes("Actions") && (
                       <td style={{ width: "8%" }}>
-                        <button type="button" className="btn btn-success" onClick={() => ViewPatientDetails(item._id)}>View</button>
+                        <Button variant="dark" onClick={() => ViewPatientDetails(item._id)} style={{ fontSize: "15px" }}>View</Button>
                       </td>
                     )}
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan={selectedColumns.length} className="text-center">No Data Found!</td>
+                  <td colSpan={selectedColumns.length} className="text-center fs-6">No Data Found!</td>
                 </tr>
               )}
             </tbody>
@@ -238,7 +248,7 @@ function DataTable() {
         </div>
 
         <div className='d-flex'>
-          <div className="d-flex align-items-center">
+          <div className="d-flex align-items-center fs-6">
             <label className="me-2">Show Entries</label>
             <select className="form-select shadow-none me-3 w-auto border border-1 border-dark d-inline-block" value={itemsPerPage} onChange={handleItemsPerPageChange}>
               <option value="10">10</option>
@@ -248,7 +258,7 @@ function DataTable() {
             </select>
           </div>
 
-          <div className="d-flex ms-auto align-items-center">
+          <div className="d-flex ms-auto align-items-center fs-6">
             <button className="btn btn-dark me-2" onClick={() => setCurrentPage(currentPage - 1)} disabled={currentPage === 1}>
               &lt;
             </button>
