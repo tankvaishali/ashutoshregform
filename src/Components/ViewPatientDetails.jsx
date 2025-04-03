@@ -25,7 +25,9 @@ function ViewPatientDetails() {
     useEffect(() => {
         setLoading(true);
         axios.get("https://aashutosh-backend.vercel.app/edit/" + dataId)
+
             .then(response => setState(response.data.data))
+
             .catch(error => console.error(error))
             .finally(() => setLoading(false));
         getdata();
@@ -48,6 +50,8 @@ function ViewPatientDetails() {
     const getdata = () => {
         axios.get("https://aashutosh-backend.vercel.app/patient_payment/Patient_id=" + dataId).then(function (response) {
             setPayment(response.data.data)
+            console.log(response.data.data);
+
         })
             .catch(function (error) {
                 console.error(error);
@@ -65,29 +69,33 @@ function ViewPatientDetails() {
     };
 
     const handleSave = () => {
+
         setLoading(true)
         setRows([newRow, ...rows]);
         setAdding(false);
+        console.log(newRow);
 
         if (!newRow._id) {
-            newRow.payment_id = newRow.id || new Date().getTime();
-            delete newRow.id;
-            axios.post('https://aashutosh-backend.vercel.app/patient_payment', { Patient_id: dataId, data: [newRow] })
+            axios.post('https://aashutosh-backend.vercel.app/patient_payment', {
+                Patient_id: dataId, data: [{
+                    date: newRow.date,
+                    next_visit: newRow.next_visit,
+                    total_charge_amount: newRow.total_charge_amount,
+                    paid_amount: newRow.paid_amount,
+                    file_charge: newRow.file_charge
+                }]
+            })
                 .then(function (response) {
+                    console.log(response.data.data);
+
                     getdata();
                     setLoading(false)
-
                 })
                 .catch(function (error) {
+                    setLoading(false)
                     console.log("error", error);
                 });
         } else {
-            newRow.user_id = dataId;
-            newRow.payment_id = newRow.id;
-            delete newRow.date_created;
-            delete newRow.id;
-            delete newRow.total_amount;
-
             axios.put("https://aashutosh-backend.vercel.app/payment-update/" + newRow._id, newRow)
                 .then(function (response) {
                     getdata();
@@ -268,6 +276,7 @@ function ViewPatientDetails() {
                                         <thead>
                                             <tr>
                                                 <th className='fw-normal' style={{ background: 'none' }}><div className='mb-2'>Last Visit</div></th>
+                                                <th className='fw-normal' style={{ background: 'none' }}><div className='mb-2'>Next Visit</div></th>
                                                 <th className='fw-normal' style={{ background: 'none' }}><div className='mb-2'>File Charge</div></th>
                                                 <th className='fw-normal' style={{ background: 'none' }}><div className='mb-2'>Total Charge</div></th>
                                                 <th className='fw-normal' style={{ background: 'none' }}><div className='mb-2'>Paid Amount</div></th>
@@ -281,8 +290,12 @@ function ViewPatientDetails() {
 
                                             {adding && (
                                                 <tr>
+
                                                     <td>
-                                                        <input type="date" className='display-4' value={newRow.date ? newRow.date.substring(0, 10) : ''} onChange={(e) => handleChange(e, 'date')} />
+                                                        <input type="date" className='' value={newRow.date ? newRow.date.substring(0, 10) : ''} onChange={(e) => handleChange(e, 'date')} />
+                                                    </td>
+                                                    <td>
+                                                        <input type="date" className='' value={newRow.next_visit ? newRow.next_visit.substring(0, 10) : ''} onChange={(e) => handleChange(e, 'next_visit')} />
                                                     </td>
                                                     <td><input type="number" value={newRow.file_charge || ''} onChange={(e) => handleChange(e, 'file_charge')} /></td>
                                                     <td><input type="number" value={newRow.total_charge_amount || ''} onChange={(e) => handleChange(e, 'total_charge_amount')} /></td>
@@ -293,18 +306,30 @@ function ViewPatientDetails() {
                                             )}
 
                                             {/* {console.log(Payment)} */}
-                                            {Payment.map((row, idx) => (
+                                            {Payment.map((row, idx) => {
+                                                //last_date
+                                                const dateString = row.date
+                                                const date = new Date(dateString);
+                                                const formattedDate = `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`;
+                                                //next_visit
+                                                const next_visit = row.next_visit
+                                                const dateformate = new Date(next_visit);
+                                                const finalnext_visitdate = `${dateformate.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`
+                                                return (
 
-                                                <tr key={idx}>
-                                                    <td className='fs-6' style={{ background: 'none' }}>{
-                                                        `${formattedDate}`}</td>
-                                                    <td className='fs-6' style={{ background: 'none' }}>{row.file_charge}</td>
-                                                    <td className='fs-6' style={{ background: 'none' }}>{row.total_charge_amount}</td>
-                                                    <td className='fs-6' style={{ background: 'none' }}>{row.paid_amount}</td>
-                                                    <td className='fs-6' style={{ background: 'none' }}>{row.total_amount}</td>
-                                                    <td className='fs-6' style={{ background: 'none' }}><Button variant="dark" onClick={() => { EditPayment(row._id) }}>Edit Payment</Button></td>
-                                                </tr>
-                                            ))}
+                                                    <tr key={idx}>
+                                                        <td className='' style={{ background: 'none' }}>{
+                                                            `${formattedDate}`}</td>
+                                                        <td className='' style={{ background: 'none' }}>{
+                                                            `${finalnext_visitdate}`}</td>
+                                                        <td className='fs-6' style={{ background: 'none' }}>{row.file_charge}</td>
+                                                        <td className='fs-6' style={{ background: 'none' }}>{row.total_charge_amount}</td>
+                                                        <td className='fs-6' style={{ background: 'none' }}>{row.paid_amount}</td>
+                                                        <td className='fs-6' style={{ background: 'none' }}>{row.total_amount}</td>
+                                                        <td className='fs-6' style={{ background: 'none' }}><Button variant="dark" onClick={() => { EditPayment(row._id) }}>Edit Payment</Button></td>
+                                                    </tr>
+                                                )
+                                            })}
                                         </tbody>
                                     </Table>
                                 </Card.Body>
