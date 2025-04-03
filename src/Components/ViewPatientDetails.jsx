@@ -89,13 +89,18 @@ function ViewPatientDetails() {
                     console.log(response.data.data);
 
                     getdata();
-                    setLoading(false)
+                    // setLoading(false)
                 })
                 .catch(function (error) {
                     setLoading(false)
                     console.log("error", error);
                 });
         } else {
+            newRow.user_id = dataId;
+            newRow.payment_id = newRow.id;
+            delete newRow.date_created;
+            delete newRow.id;
+            delete newRow.total_amount;
             axios.put("https://aashutosh-backend.vercel.app/payment-update/" + newRow._id, newRow)
                 .then(function (response) {
                     getdata();
