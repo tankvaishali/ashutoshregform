@@ -79,7 +79,7 @@ function DataTable() {
     link.href = URL.createObjectURL(blob);
     link.download = "TableData.csv";
     link.click();
-  }; 
+  };
 
   const printTable = () => {
     const printWindow = window.open('', '', 'width=800,height=600');
