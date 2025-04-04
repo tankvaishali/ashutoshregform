@@ -23,7 +23,6 @@ function DataTable() {
     "Date", "Name", "E-mail", "Phone Number", "Address", "Blood Group", "Gender", "Actions"
   ]);
   const [loading, setLoading] = useState(true);
-
   useEffect(() => {
     setLoading(true);
     axios
