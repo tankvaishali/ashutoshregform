@@ -7,6 +7,7 @@ import DataTable from './Components/DataTable';
 import ViewPatientDetails from './Components/ViewPatientDetails';
 import Logindoc from './Components/Logindoc';
 import ProtectRouter from './Components/ProtectRouter';
+import PatientDataCheck from './Components/PatientDataCheck';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
             <Route path='/DataTable' element={<DataTable />} />
             <Route path='/ViewPatientDetails' element={<ProtectRouter><ViewPatientDetails /></ProtectRouter>} />
             <Route path='/login' element={<Logindoc />} />
+            <Route path='/patientdatacheck' element={<PatientDataCheck />} />
           </Routes>
         </BrowserRouter>
       </div></>
