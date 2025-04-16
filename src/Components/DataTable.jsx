@@ -9,7 +9,6 @@ import "../assets/CSS/DataTable.css";
 import { useNavigate } from 'react-router-dom';
 
 function DataTable() {
-
   const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
@@ -24,7 +23,6 @@ function DataTable() {
     "Date", "Name", "E-mail", "Phone Number", "Address", "Blood Group", "Gender", "Actions"
   ]);
   const [loading, setLoading] = useState(true);
-
   useEffect(() => {
     setLoading(true);
     axios
