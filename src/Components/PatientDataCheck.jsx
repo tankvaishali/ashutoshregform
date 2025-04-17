@@ -3,74 +3,48 @@ import React, { useEffect, useState } from "react";
 import { Table } from "react-bootstrap";
 
 function PatientDataCheck() {
-    const [allPatients, setAllPatients] = useState([]);
     const [filteredPatients, setFilteredPatients] = useState([]);
     const [selectedDate, setSelectedDate] = useState("");
     const [loading, setLoading] = useState(true);
 
+    // Ensures consistent YYYY-MM-DD format
     const formatDate = (date) => {
-        return date ? new Date(date).toISOString().split("T")[0] : null;
+        return new Date(date).toISOString().split("T")[0];
     };
-
     useEffect(() => {
-        setLoading(true);
-        const currentDate = formatDate(new Date());
-        setSelectedDate(currentDate);
-        fetchPatients(currentDate);
+        const today = formatDate(new Date());
+        setSelectedDate(today);
+        fetchPatients(today);
     }, []);
 
     const fetchPatients = async (date) => {
+        setLoading(true);
         try {
-            const response = await axios.get("https://aashutosh-backend.vercel.app/getpatient");
-            const patients = response.data;
-
-            const patientDataWithNextVisit = await Promise.all(
-                patients.map(async (patient) => {
-                    try {
-                        const paymentResponse = await axios.get(
-                            `https://aashutosh-backend.vercel.app/patient_payment/Patient_id=${patient._id}`,
-                            { timeout: 5000 }
-                        );
-                        const paymentData = paymentResponse.data.data;
-
-                        let nextVisits = paymentData
-                            .filter(item => item.next_visit)
-                            .map(item => formatDate(item.next_visit));
-
-                        return { ...patient, next_visits: nextVisits };
-                    } catch (error) {
-                        return { ...patient, next_visits: [] };
-                    }
-                })
-            );
-
-            setAllPatients(patientDataWithNextVisit);
-            filterPatientsByDate(patientDataWithNextVisit, date);
+            const response = await axios.get(`https://aashutosh-backend.vercel.app/patients-by-date?date=${date}`);
+            setFilteredPatients(response.data);
         } catch (error) {
-            console.error("Error fetching patients:", error);
+            console.error("Error fetching patients by date:", error);
+            setFilteredPatients([]);
         } finally {
             setLoading(false);
         }
     };
 
-    const filterPatientsByDate = (patients, date) => {
-        const filteredData = patients.filter(
-            (patient) => formatDate(patient.date_joined) === date || patient.next_visits.includes(date)
-        );
-
-        setFilteredPatients(filteredData);
-    };
-
     const handleDateChange = (event) => {
-        const date = event.target.value;
-        setSelectedDate(date);
-        filterPatientsByDate(allPatients, date);
+        const selected = event.target.value;  // already in YYYY-MM-DD format from input
+        setSelectedDate(selected);
+        fetchPatients(selected);
     };
 
     if (loading) {
         return (
             <div className="d-flex justify-content-center align-items-center" style={{ height: "100vh" }}>
-                <img src="https://media.tenor.com/1s1_eaP6BvgAAAAC/rainbow-spinner-loading.gif" alt="" className='img-fluid bg-white' width={150} />
+                <img
+                    src="https://media.tenor.com/1s1_eaP6BvgAAAAC/rainbow-spinner-loading.gif"
+                    alt="loading"
+                    className="img-fluid bg-white"
+                    width={150}
+                />
             </div>
         );
     }
