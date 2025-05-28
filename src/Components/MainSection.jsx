@@ -789,7 +789,7 @@ function Mainsection() {
                             <Form.Group className="mb-3 col-sm-6 col-11 p-1" controlId="formBasicDiagnose">
                                 <Form.Label>Ref. Doctor</Form.Label>
                                 <InputGroup>
-                                    <InputGroup.Text id="basic-addon1">
+                                  <InputGroup.Text id="basic-addon1">    
                                         <FaUserMd />
                                     </InputGroup.Text>
                                     <div className="flex-grow-1">
