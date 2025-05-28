@@ -10,11 +10,10 @@ import ProtectRouter from './Components/ProtectRouter';
 import PatientDataCheck from './Components/PatientDataCheck';
 
 function App() {
-  const isElectron = window.location.protocol === 'file:';
   return (
     <>
       <div>
-        <BrowserRouter basename={isElectron ? '/' : '/'}>
+        <BrowserRouter>
           <Routes>
             <Route path='/' element={<DateNow />} />
             <Route path='/Registration' element={<RegistrationForm />} />
