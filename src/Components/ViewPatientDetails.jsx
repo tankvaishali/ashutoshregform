@@ -24,7 +24,7 @@
 
 //     useEffect(() => {
 //         setLoading(true);
-//         axios.get("https://aashutosh-backend.vercel.app/edit/" + dataId)
+//         axios.get("https://aashutosh-node-backend.onrender.com/edit/" + dataId)
 
 //             .then(response => setState(response.data.data))
 
@@ -37,7 +37,7 @@
 
 
 //     useEffect(() => {
-//         axios.get("https://aashutosh-backend.vercel.app/edit/" + dataId)
+//         axios.get("https://aashutosh-node-backend.onrender.com/edit/" + dataId)
 //             .then(function (response) {
 //                 setState(response.data.data);
 //             })
@@ -48,7 +48,7 @@
 
 //     // Get Payment Data
 //     const getdata = () => {
-//         axios.get("https://aashutosh-backend.vercel.app/patient_payment/Patient_id=" + dataId).then(function (response) {
+//         axios.get("https://aashutosh-node-backend.onrender.com/patient_payment/Patient_id=" + dataId).then(function (response) {
 //             setPayment(response.data.data)
 //             console.log(response.data.data);
 
@@ -76,7 +76,7 @@
 //         console.log(newRow);
 
 //         if (!newRow._id) {
-//             axios.post('https://aashutosh-backend.vercel.app/patient_payment', {
+//             axios.post('https://aashutosh-node-backend.onrender.com/patient_payment', {
 //                 Patient_id: dataId, data: [{
 //                     date: newRow.date,
 //                     next_visit: newRow.next_visit,
@@ -102,7 +102,7 @@
 //             delete newRow.date_created;
 //             delete newRow.id;
 //             delete newRow.total_amount;
-//             axios.put("https://aashutosh-backend.vercel.app/payment-update/" + newRow._id, newRow)
+//             axios.put("https://aashutosh-node-backend.onrender.com/payment-update/" + newRow._id, newRow)
 //                 .then(function (response) {
 //                     getdata();
 //                     setLoading(false)
@@ -121,7 +121,7 @@
 
 //     const DeviceName = () => {
 //         //Devices_Data
-//         axios.get('https://aashutosh-backend.vercel.app/devices')
+//         axios.get('https://aashutosh-node-backend.onrender.com/devices')
 //             .then((response) => {
 //                 setDevice(response.data);
 //             })
@@ -132,7 +132,7 @@
 
 //     const DiognoseName = () => {
 //         //Diagnosis_Data
-//         axios.get('https://aashutosh-backend.vercel.app/diagnosis')
+//         axios.get('https://aashutosh-node-backend.onrender.com/diagnosis')
 //             .then(function (response) {
 //                 setArray(response.data);
 
@@ -372,7 +372,7 @@ function ViewPatientDetails() {
   useEffect(() => {
     setLoading(true)
     axios
-      .get("https://aashutosh-backend.vercel.app/edit/" + dataId)
+      .get("https://aashutosh-node-backend.onrender.com/edit/" + dataId)
       .then((response) => {
         setState(response.data.data)
         // Initialize selectedDataq with patient's diagnosis and device data
@@ -392,7 +392,7 @@ function ViewPatientDetails() {
   // Get Payment Data
   const getdata = () => {
     axios
-      .get("https://aashutosh-backend.vercel.app/patient_payment/Patient_id=" + dataId)
+      .get("https://aashutosh-node-backend.onrender.com/patient_payment/Patient_id=" + dataId)
       .then((response) => {
         setPayment(response.data.data)
         console.log(response.data.data)
@@ -421,7 +421,7 @@ function ViewPatientDetails() {
     if (!newRow._id) {
       // Create new payment record
       axios
-        .post("https://aashutosh-backend.vercel.app/patient_payment", {
+        .post("https://aashutosh-node-backend.onrender.com/patient_payment", {
           Patient_id: dataId,
           data: [
             {
@@ -455,7 +455,7 @@ function ViewPatientDetails() {
       }
 
       axios
-        .put("https://aashutosh-backend.vercel.app/payment-update/" + newRow._id, updatedPayment)
+        .put("https://aashutosh-node-backend.onrender.com/payment-update/" + newRow._id, updatedPayment)
         .then((response) => {
           getdata()
           setLoading(false)
@@ -477,7 +477,7 @@ function ViewPatientDetails() {
   const DeviceName = () => {
     //Devices_Data
     axios
-      .get("https://aashutosh-backend.vercel.app/devices")
+      .get("https://aashutosh-node-backend.onrender.com/devices")
       .then((response) => {
         setDevice(response.data)
       })
@@ -489,7 +489,7 @@ function ViewPatientDetails() {
   const DiognoseName = () => {
     //Diagnosis_Data
     axios
-      .get("https://aashutosh-backend.vercel.app/diagnosis")
+      .get("https://aashutosh-node-backend.onrender.com/diagnosis")
       .then((response) => {
         setArray(response.data)
       })
@@ -522,7 +522,7 @@ function ViewPatientDetails() {
     setEditd(false)
     // Save the updated diagnosis and device data
     axios
-      .put(`https://aashutosh-backend.vercel.app/update/${dataId}`, {
+      .put(`https://aashutosh-node-backend.onrender.com/update/${dataId}`, {
         diagnosis_name: selectedDataq.diagnosis_name,
         device_name: selectedDataq.device_name,
       })
@@ -530,7 +530,7 @@ function ViewPatientDetails() {
         console.log("Updated patient data:", response.data)
         // Refresh patient data
         axios
-          .get("https://aashutosh-backend.vercel.app/edit/" + dataId)
+          .get("https://aashutosh-node-backend.onrender.com/edit/" + dataId)
           .then((response) => setState(response.data.data))
           .catch((error) => console.error(error))
       })

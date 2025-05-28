@@ -24,6 +24,12 @@ function Mainsection() {
     const bloodGroups = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
     const [display, setDisplay] = useState(false)
     const [errormsg, seterrormsg] = useState({});
+
+    // list of gujarat city
+    const gujaratCities = ["Ahmedabad", "Surat", "Vadodara", "Rajkot", "Bhavnagar", "Jamnagar", "Gandhinagar", "Junagadh", "Anand", "Navsari", "Bharuch", "Vapi", "Gondal", "Veraval", "Nadiad", "Morbi", "Mehsana", "Surendranagar", "Amreli", "Porbandar", "Godhra", "Patan", "Dahod", "Valsad", "Palanpur", "Botad", "Deesa", "Chhota Udaipur", "Modasa", "Jetpur"];
+    const [isGujarat, setIsGujarat] = useState(patientInfo.state === 'Gujarat');
+
+
     // All Onchange
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -68,10 +74,11 @@ function Mainsection() {
                 delete newErrors["name.middle_name"];
                 delete newErrors["name.last_name"];
             }
-        } else {
-            newErrors["name.middle_name"] = "Either Middle name or Last name is required";
-            newErrors["name.last_name"] = "Either Middle name or Last name is required";
         }
+        // else {
+        //     newErrors["name.middle_name"] = "Either Middle name or Last name is required";
+        //     newErrors["name.last_name"] = "Either Middle name or Last name is required";
+        // }
 
         seterrormsg(newErrors);
         switch (name) {
@@ -140,13 +147,7 @@ function Mainsection() {
                     delete newErrors.age;
                 }
                 break;
-            case "bloodGroup":
-                if (!value) {
-                    newErrors.bloodGroup = "Blood group is required";
-                } else {
-                    delete newErrors.bloodGroup;
-                }
-                break;
+
             case "Diagnosis":
                 if (!value) {
                     newErrors.Diagnosis = "Diagnosis is required";
@@ -182,6 +183,23 @@ function Mainsection() {
         seterrormsg(newErrors);
     };
 
+    const handleStateChange = (e) => {
+        const value = e.target.value;
+        setPatientInfo(prev => ({
+            ...prev,
+            state: value,
+            city: '' // reset city on state change
+        }));
+        setIsGujarat(value === 'Gujarat');
+    };
+
+    const handleCityChange = (e) => {
+        setPatientInfo(prev => ({
+            ...prev,
+            city: e.target.value
+        }));
+    };
+
     const [inputValue, setInputValue] = useState('');
     // OnInputChange
     const handleInputChange = newValue => {
@@ -195,6 +213,19 @@ function Mainsection() {
     };
     const handleInputChange3 = newValue => {
         setInputValue(newValue);
+    };
+    const handleDoctorInputChange = (e) => {
+        const value = e.target.value;
+        setPatientInfo(prev => ({
+            ...prev,
+            Doctor: value
+        }));
+
+        const newErrors = { ...errormsg };
+        if (value) {
+            delete newErrors.Doctor;
+            seterrormsg(newErrors);
+        }
     };
 
     // OnChange={handleDiagnosisChange} 
@@ -279,7 +310,7 @@ function Mainsection() {
     //Regester Patient Data
     const ApiCall = async () => {
         try {
-            await axios.post('https://aashutosh-backend.vercel.app/add-patient', {
+            await axios.post('https://aashutosh-node-backend.onrender.com/add-patient', {
                 name: {
                     first_name: patientInfo.name.first_name,
                     middle_name: patientInfo.name.middle_name,
@@ -365,9 +396,7 @@ function Mainsection() {
             newErrormsg.age = "Please it's required";
         }
 
-        if (!patientInfo.bloodGroup) {
-            newErrormsg.bloodGroup = "Blood group is required";
-        }
+
 
         if (!patientInfo.diagnosis) {
             newErrormsg.diagnosis = "Please it's required";
@@ -462,7 +491,7 @@ function Mainsection() {
 
         //Devices_Data
         // axios.get(server + 'filter-device-data/')
-        axios.get("https://aashutosh-backend.vercel.app/devices")
+        axios.get("https://aashutosh-node-backend.onrender.com/devices")
             .then((response) => {
                 // console.log(response.data);
                 setDevice(response.data);
@@ -473,7 +502,7 @@ function Mainsection() {
 
 
         //Diagnosis_Data
-        axios.get("https://aashutosh-backend.vercel.app/diagnosis")
+        axios.get("https://aashutosh-node-backend.onrender.com/diagnosis")
             .then(function (response) {
                 setArray(response.data);
                 // console.log(response.data);
@@ -484,7 +513,7 @@ function Mainsection() {
 
         //Doctor_Data
         // axios.get(server + 'filter-doctor-data/')
-        axios.get("https://aashutosh-backend.vercel.app/doctor")
+        axios.get("https://aashutosh-node-backend.onrender.com/doctor")
             .then(function (response) {
                 setDoctor(response.data);
                 // console.log(response.data);
@@ -495,7 +524,7 @@ function Mainsection() {
 
         //Hospital_Data
         // axios.get(server + 'filter-hospital-data/')
-        axios.get("https://aashutosh-backend.vercel.app/hospital")
+        axios.get("https://aashutosh-node-backend.onrender.com/hospital")
             .then(function (response) {
                 // console.log(response.data);
                 setHospital(response.data);
@@ -577,12 +606,12 @@ function Mainsection() {
                                         {bloodGroups.map(group => <option key={group} value={group}>{group}</option>)}
                                     </Form.Control>
                                 </InputGroup>
-                                <div className={errormsg ? "span1 text-danger fs-6" : "span2"}>{errormsg.bloodGroup}</div>
+
                             </Form.Group>
                         </div>
 
                         {/* Address */}
-                        <div className='row align-items-center justify-content-center'>
+                        {/* <div className='row align-items-center justify-content-center'>
                             <FormGroup className="mb-3 p-sm-0 p-3 col-sm-12 " controlId="formBasicBloodGroup">
                                 <Form.Label className='ms-sm-0 ms-3'>Address</Form.Label>
                                 <div className='container-fluid p-sm-0'>
@@ -601,6 +630,86 @@ function Mainsection() {
                                         </Col>
                                         <Col xs={6} md={6} lg={6} >
                                             <FormControl className='p-3 mt-sm-2 mt-2 mt-sm-4 placehold' placeholder="Zipcode" name="Zipcode" value={patientInfo.Zipcode} onChange={handleChange} />
+                                        </Col>
+                                    </Row>
+                                </div>
+                            </FormGroup>
+                        </div> */}
+
+                        <div className='row align-items-center justify-content-center'>
+                            <FormGroup className="mb-3 p-sm-0 p-3 col-sm-12" controlId="formBasicBloodGroup">
+                                <Form.Label className='ms-sm-0 ms-3'>Address</Form.Label>
+                                <div className='container-fluid p-sm-0'>
+                                    <Row>
+                                        <Col xs={12} md={4} lg={4}>
+                                            <FormControl
+                                                className='p-3 mt-sm-2 mt-2 placehold'
+                                                placeholder="Street"
+                                                name="street"
+                                                value={patientInfo.street}
+                                                onChange={handleChange}
+                                            />
+                                        </Col>
+
+                                        {/* Conditional City Field */}
+
+
+                                        {/* State Dropdown */}
+                                        <Col xs={6} md={4} lg={4}>
+                                            <Form.Select
+                                                className='p-3 mt-sm-2 mt-2 bg-transparent placehold'
+                                                style={{ border: "2px solid #2a16188c" }}
+                                                name="state"
+                                                value={patientInfo.state}
+                                                onChange={handleStateChange}
+                                            >
+                                                <option value="">Select State</option>
+                                                <option value="Gujarat">Gujarat</option>
+                                                <option value="Out of Gujarat">Out of Gujarat</option>
+                                            </Form.Select>
+                                        </Col>
+                                        <Col xs={6} md={4} lg={4}>
+                                            {isGujarat ? (
+                                                <Form.Select
+                                                    className='p-3 mt-sm-2 mt-2 placehold bg-transparent'
+                                                    style={{ border: "2px solid #2a16188c" }}
+                                                    name="city"
+                                                    value={patientInfo.city}
+                                                    onChange={handleCityChange}
+                                                >
+                                                    <option value="">Select City</option>
+                                                    {gujaratCities.map((city, idx) => (
+                                                        <option key={idx} value={city}>{city}</option>
+                                                    ))}
+                                                </Form.Select>
+                                            ) : (
+                                                <FormControl
+                                                    className='p-3 mt-sm-2 mt-2 placehold'
+                                                    placeholder="Enter City"
+                                                    name="city"
+                                                    value={patientInfo.city}
+                                                    onChange={handleCityChange}
+                                                />
+                                            )}
+                                        </Col>
+
+                                        <Col xs={6} md={6} lg={6}>
+                                            <FormControl
+                                                className='p-3 mt-sm-2 mt-2 mt-sm-4 placehold'
+                                                placeholder="Country"
+                                                name="country"
+                                                value={patientInfo.country}
+                                                onChange={handleChange}
+                                            />
+                                        </Col>
+                                        <Col xs={6} md={6} lg={6}>
+                                            <FormControl
+                                                className='p-3 mt-sm-2 mt-2 mt-sm-4 placehold'
+                                                placeholder="Zipcode"
+                                                name="Zipcode"
+                                                value={patientInfo.Zipcode}
+                                                onChange={handleChange}
+                                            />
                                         </Col>
                                     </Row>
                                 </div>
@@ -639,6 +748,8 @@ function Mainsection() {
                                         value={options.find(option => option.value === patientInfo.diagnosis)}
                                         onChange={handleDiagnosisChange}
                                         onInputChange={handleInputChange}
+                                        isClearable
+                                        isSearchable
                                         options={options}
                                         placeholder="Select Diagnosis"
                                     />
@@ -670,16 +781,22 @@ function Mainsection() {
                             <Form.Group className="mb-3 col-sm-6 col-11 p-1" controlId="formBasicDiagnose">
                                 <Form.Label>Ref. Doctor</Form.Label>
                                 <InputGroup>
-                                    <InputGroup.Text id="basic-addon1"><FaUserMd /></InputGroup.Text>
-                                    <Select
-                                        name='diagnosis'
-                                        className="flex-grow-1 custom-select p-1 placehold col fs-6 rounded-end"
-                                        value={options3.find(option => option.value === patientInfo.Doctor)}
-                                        onChange={handleDoctorChange}
-                                        onInputChange={handleInputChange2}
-                                        options={options3}
-                                        placeholder="Select Doctor"
+                                    <InputGroup.Text id="basic-addon1">
+                                        <FaUserMd />
+                                    </InputGroup.Text>
+                                    <input
+                                        list="doctor-options"
+                                        className="form-control p-1 py-3 fs-6 rounded-end"
+                                        name="diagnosis"
+                                        value={patientInfo.Doctor}
+                                        onChange={(e) => handleDoctorInputChange(e)}
+                                        placeholder="Select or type Doctor"
                                     />
+                                    <datalist id="doctor-options">
+                                        {options3.map((option, index) => (
+                                            <option key={index} value={option.value}>{option.label}</option>
+                                        ))}
+                                    </datalist>
                                 </InputGroup>
                                 <div className={errormsg ? "span1 text-danger fs-6" : "span2"}>{errormsg.Doctor}</div>
                             </Form.Group>
@@ -693,6 +810,8 @@ function Mainsection() {
                                         value={options4.find(option => option.value === patientInfo.Hospital)}
                                         onChange={handleHospitalChange}
                                         onInputChange={handleInputChange3}
+                                        isClearable
+                                        isSearchable
                                         options={options4}
                                         placeholder="Select Hospital"
                                     />

@@ -26,7 +26,7 @@ function DataTable() {
   useEffect(() => {
     setLoading(true);
     axios
-      .get("https://aashutosh-backend.vercel.app/getpatient")
+      .get("https://aashutosh-node-backend.onrender.com/getpatient")
       .then((response) => setData(response.data))
       .catch((error) => console.error("Error fetching data:", error))
       .finally(() => setLoading(false));

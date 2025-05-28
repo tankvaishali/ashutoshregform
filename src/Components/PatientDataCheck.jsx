@@ -20,7 +20,7 @@ function PatientDataCheck() {
     const fetchPatients = async (date) => {
         setLoading(true);
         try {
-            const response = await axios.get(`https://aashutosh-backend.vercel.app/patients-by-date?date=${date}`);
+            const response = await axios.get(`https://aashutosh-node-backend.onrender.com/patients-by-date?date=${date}`);
             setFilteredPatients(response.data);
         } catch (error) {
             console.error("Error fetching patients by date:", error);
