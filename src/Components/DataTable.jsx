@@ -6,7 +6,7 @@ import { HiViewColumns } from 'react-icons/hi2';
 import { MdFilterList, MdPrint } from 'react-icons/md';
 import * as XLSX from "xlsx";
 import "../assets/CSS/DataTable.css";
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 function DataTable() {
   const [data, setData] = useState([]);
@@ -266,6 +266,13 @@ function DataTable() {
             </button>
           </div>
         </div>
+
+        <Link to={"/"}>
+          <div className='text-center mt-4'>
+            <button type='button' className='btn btn-dark fw-medium'>Back</button>
+          </div>
+        </Link>
+
       </div>
     </div>
   );

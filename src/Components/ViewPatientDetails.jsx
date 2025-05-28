@@ -95,7 +95,7 @@
 //                     console.log("error", error);
 //                 });
 //         } else {
-            
+
 //             // next_visit = newRow.next_visit,
 //             newRow.user_id = dataId;
 //             newRow.payment_id = newRow.id;
@@ -354,6 +354,7 @@ import { FaAddressCard, FaBirthdayCake, FaDiagnoses } from "react-icons/fa"
 import { FcContacts } from "react-icons/fc"
 import axios from "axios"
 import Select from "react-select"
+import { Link } from "react-router-dom"
 
 function ViewPatientDetails() {
   const dataId = localStorage.getItem("ViewPatientDetails")
@@ -541,16 +542,16 @@ function ViewPatientDetails() {
 
   const Arrayoptions = Array.isArray(array)
     ? array.map((diagnosis) => ({
-        label: diagnosis.diagnosis_name,
-        value: diagnosis.diagnosis_name,
-      }))
+      label: diagnosis.diagnosis_name,
+      value: diagnosis.diagnosis_name,
+    }))
     : []
 
   const DevicesOptions = Array.isArray(device)
     ? device.map((Device) => ({
-        label: Device.device_name,
-        value: Device.device_name,
-      }))
+      label: Device.device_name,
+      value: Device.device_name,
+    }))
     : []
 
   if (!selectedData) return <p>Loading...</p>
@@ -811,6 +812,13 @@ function ViewPatientDetails() {
             </Container>
           </div>
         </div>
+
+        <Link to={"/DataTable"}>
+          <div className='text-center mt-4'>
+            <button type='button' className='btn btn-dark fw-medium'>Back</button>
+          </div>
+        </Link>
+
       </div>
     </div>
   )
