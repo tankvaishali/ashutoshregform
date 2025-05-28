@@ -11,6 +11,7 @@ import axios from 'axios';
 import Select from 'react-select';
 import { MdAir } from 'react-icons/md';
 import { Link } from 'react-router-dom';
+import CreatableSelect from 'react-select/creatable';
 
 function Mainsection() {
 
@@ -620,32 +621,6 @@ function Mainsection() {
                             </Form.Group>
                         </div>
 
-                        {/* Address */}
-                        {/* <div className='row align-items-center justify-content-center'>
-                            <FormGroup className="mb-3 p-sm-0 p-3 col-sm-12 " controlId="formBasicBloodGroup">
-                                <Form.Label className='ms-sm-0 ms-3'>Address</Form.Label>
-                                <div className='container-fluid p-sm-0'>
-                                    <Row>
-                                        <Col xs={12} md={4} lg={4} >
-                                            <FormControl className='p-3 mt-sm-2 mt-2  placehold' placeholder="Street" name="street" value={patientInfo.street} onChange={handleChange} />
-                                        </Col>
-                                        <Col xs={6} md={4} lg={4} >
-                                            <FormControl className='p-3 mt-sm-2 mt-2  placehold' placeholder="City" name="city" value={patientInfo.city} onChange={handleChange} />
-                                        </Col>
-                                        <Col xs={6} md={4} lg={4} >
-                                            <FormControl className='p-3 mt-sm-2 mt-2  placehold' placeholder="State" name="state" value={patientInfo.state} onChange={handleChange} />
-                                        </Col>
-                                        <Col xs={6} md={6} lg={6} >
-                                            <FormControl className='p-3 mt-sm-2 mt-2 mt-sm-4 placehold' placeholder="Country" name="country" value={patientInfo.country} onChange={handleChange} />
-                                        </Col>
-                                        <Col xs={6} md={6} lg={6} >
-                                            <FormControl className='p-3 mt-sm-2 mt-2 mt-sm-4 placehold' placeholder="Zipcode" name="Zipcode" value={patientInfo.Zipcode} onChange={handleChange} />
-                                        </Col>
-                                    </Row>
-                                </div>
-                            </FormGroup>
-                        </div> */}
-
                         <div className='row align-items-center justify-content-center'>
                             <FormGroup className="mb-3 p-sm-0 p-3 col-sm-12" controlId="formBasicBloodGroup">
                                 <Form.Label className='ms-sm-0 ms-3'>Address</Form.Label>
@@ -788,7 +763,7 @@ function Mainsection() {
 
                         {/* Ref. Doctor */}
                         <div className='row align-items-center justify-content-center'>
-                            <Form.Group className="mb-3 col-sm-6 col-11 p-1" controlId="formBasicDiagnose">
+                            {/* <Form.Group className="mb-3 col-sm-6 col-11 p-1" controlId="formBasicDiagnose">
                                 <Form.Label>Ref. Doctor</Form.Label>
                                 <InputGroup>
                                     <InputGroup.Text id="basic-addon1">
@@ -807,6 +782,48 @@ function Mainsection() {
                                             <option key={index} value={option.value}>{option.label}</option>
                                         ))}
                                     </datalist>
+                                </InputGroup>
+                                <div className={errormsg ? "span1 text-danger fs-6" : "span2"}>{errormsg.Doctor}</div>
+                            </Form.Group> */}
+
+                            <Form.Group className="mb-3 col-sm-6 col-11 p-1" controlId="formBasicDiagnose">
+                                <Form.Label>Ref. Doctor</Form.Label>
+                                <InputGroup>
+                                    <InputGroup.Text id="basic-addon1">
+                                        <FaUserMd />
+                                    </InputGroup.Text>
+                                    <div className="flex-grow-1">
+                                        <CreatableSelect
+                                            className='flex-grow-1 custom-select p-1 placehold col fs-6 rounded-end bg-transparent'
+                                            options={options3}
+                                            value={
+                                                // If typed value exists in options, select that option, else create a temporary option
+                                                options3.find(opt => opt.value === patientInfo.Doctor) ||
+                                                (patientInfo.Doctor ? { label: patientInfo.Doctor, value: patientInfo.Doctor } : null)
+                                            }
+                                            onChange={(selected) => {
+                                                // selected can be null if cleared
+                                                handleDoctorInputChange({ target: { name: 'diagnosis', value: selected ? selected.value : '' } });
+                                            }}
+                                            onCreateOption={(inputValue) => {
+                                                // When user types a new value and hits enter or blurs
+                                                handleDoctorInputChange({ target: { name: 'diagnosis', value: inputValue } });
+                                            }}
+                                            isClearable
+                                            styles={{
+                                                option: (base, { isFocused }) => ({
+                                                    ...base,
+                                                    backgroundColor: isFocused ? '#d0f0ff' : '#fff',
+                                                    color: '#000',
+                                                }),
+                                                control: (base) => ({
+                                                    ...base,
+                                                    minHeight: '40px',
+                                                }),
+                                            }}
+                                            placeholder="Search Or Type Doctor Name"
+                                        />
+                                    </div>
                                 </InputGroup>
                                 <div className={errormsg ? "span1 text-danger fs-6" : "span2"}>{errormsg.Doctor}</div>
                             </Form.Group>

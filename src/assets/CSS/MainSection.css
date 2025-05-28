@@ -136,3 +136,20 @@
     border: 7px solid #6d6e8a;
     box-shadow: 6px 6px 20px #6d6e8a;
 }
+
+
+/*css for react form select with type also  mainsection.jsx line no.789 to no.829*/
+.css-nalcay-control {
+    background: transparent !important;
+    border: none !important;
+    padding-top: 5.3px !important;
+    padding-bottom: 5.3px !important;
+}
+
+.css-1thsgv7-control {
+    background: transparent !important;
+    border: none !important;
+    padding-top: 5.3px !important;
+    padding-bottom: 5.3px !important;
+    box-shadow: none !important;
+}

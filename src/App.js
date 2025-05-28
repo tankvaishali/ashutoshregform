@@ -24,6 +24,8 @@ function App() {
             <Route path='/patientdatacheck' element={<PatientDataCheck />} />
           </Routes>
         </BrowserRouter>
+
+        
       </div></>
   );
 }
