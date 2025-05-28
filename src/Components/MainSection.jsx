@@ -5,10 +5,12 @@ import { IoMail } from 'react-icons/io5';
 import { HiDeviceMobile } from 'react-icons/hi';
 import { BsCashCoin, BsCurrencyDollar, BsDropletHalf } from 'react-icons/bs';
 import { CiStethoscope } from 'react-icons/ci';
-import { FaHospital, FaPrint, FaUserMd } from 'react-icons/fa';
+import { FaHospital, FaPrint, FaUserMd, } from 'react-icons/fa';
+import { FaArrowLeftLong } from "react-icons/fa6";
 import axios from 'axios';
 import Select from 'react-select';
 import { MdAir } from 'react-icons/md';
+import { Link } from 'react-router-dom';
 
 function Mainsection() {
 
@@ -543,9 +545,17 @@ function Mainsection() {
 
     return (
         <>
-            <div className="container-fluid bg pb-2 ">
+            {/* https://ashutoshregform.vercel.app/ */}
+            <div className="container-fluid bg pb-2">
                 <div className='row align-items-center justify-content-center'>
                     <Form onSubmit={handleSubmit} className='col-lg-8 col-md-9 col-sm-10 col-12 ' >
+                        <div className='pt-4'>
+                            <Link to={"/"}>
+                                <div className='text-start'>
+                                    <button type='button' className='btn btn-dark fw-medium pb-2'><FaArrowLeftLong /></button>
+                                </div>
+                            </Link>
+                        </div>
                         {/*Logo*/}
                         <div className='row align-items-center justify-content-evenly'>
                             <div className="col-sm-6 col-11 p-0 row align-items-center justify-content-center">

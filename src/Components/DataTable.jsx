@@ -7,6 +7,7 @@ import { MdFilterList, MdPrint } from 'react-icons/md';
 import * as XLSX from "xlsx";
 import "../assets/CSS/DataTable.css";
 import { Link, useNavigate } from 'react-router-dom';
+import { FaArrowLeftLong } from 'react-icons/fa6';
 
 function DataTable() {
   const [data, setData] = useState([]);
@@ -130,6 +131,13 @@ function DataTable() {
   return (
     <div className="bg text-start">
       <div className='container py-5'>
+        <div className="pb-5">
+          <Link to={"/"}>
+            <div className='text-start'>
+              <button type='button' className='btn btn-dark fw-medium pb-2'><FaArrowLeftLong /></button>
+            </div>
+          </Link>
+        </div>
         <div className='d-flex justify-content-between'>
           <div>
             <img
@@ -267,11 +275,7 @@ function DataTable() {
           </div>
         </div>
 
-        <Link to={"/"}>
-          <div className='text-center mt-4'>
-            <button type='button' className='btn btn-dark fw-medium'>Back</button>
-          </div>
-        </Link>
+
 
       </div>
     </div>

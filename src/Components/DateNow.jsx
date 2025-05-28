@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Form, InputGroup } from 'react-bootstrap';
 import { BsDropletHalf } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
@@ -17,6 +17,8 @@ function DateNow() {
                 navigate('/Registration');
             } else if (value === 'old') {
                 navigate('/DataTable');
+            } else if (value === 'viewpatientsbydate') {
+                navigate('/patientdatacheck');
             }
             return; // Prevent setting state if navigation is happening
         }
@@ -50,6 +52,7 @@ function DateNow() {
                                             <option value="" style={{ background: '#2a16186b' }}>Select Patient Type</option>
                                             <option key='New' value="new" style={{ background: '#2a16186b' }}>New Case</option>
                                             <option key='old' value="old" style={{ background: '#2a16186b' }}>Old Case</option>
+                                            <option key='viewpatientsbydate' value="viewpatientsbydate" style={{ background: '#2a16186b' }}>View Patients By Date</option>
                                         </Form.Control>
                                     </InputGroup>
                                 </Form.Group>

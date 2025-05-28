@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Form, InputGroup } from 'react-bootstrap';
 import { CgLogIn } from 'react-icons/cg';
+import { FaArrowLeftLong } from 'react-icons/fa6';
 import { RiLockPasswordFill } from 'react-icons/ri';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 function Logindoc() {
     const navigate = useNavigate()
@@ -32,6 +33,13 @@ function Logindoc() {
             <div className="container-fluid bg">
                 <div className='row align-items-center justify-content-center vh-100'>
                     <Form className='col-lg-8 col-md-9 col-sm-10 col-11'>
+                        <div className="container ms-4 mb-4">
+                            <Link to={"/DataTable"}>
+                                <div className='text-start mt-4'>
+                                    <button type='button' className='btn btn-dark fw-medium pb-2'><FaArrowLeftLong /></button>
+                                </div>
+                            </Link>
+                        </div>
                         <div className='row align-items-center justify-content-evenly'>
                             <div className="col-sm-6 col-11 p-0 row align-items-center justify-content-center">
                                 <div className='col-sm-9 col-10 m-5'>

@@ -1,6 +1,8 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Table } from "react-bootstrap";
+import { FaArrowLeftLong } from "react-icons/fa6";
+import { Link } from "react-router-dom";
 
 function PatientDataCheck() {
     const [filteredPatients, setFilteredPatients] = useState([]);
@@ -52,7 +54,14 @@ function PatientDataCheck() {
     return (
         <div className="bg">
             <div className="container py-5">
-                <h2 className="text-center mb-3 fw-bold">View Patients by Date</h2>
+                <div className="mb-4">
+                    <Link to={"/"}>
+                        <div className='text-start mt-4'>
+                            <button type='button' className='btn btn-dark fw-medium pb-2'><FaArrowLeftLong /></button>
+                        </div>
+                    </Link>
+                </div>
+                <h2 className="text-center mb-3 fw-bold">View Patients By Date</h2>
 
                 <div className="mb-3 mx-auto col-8 col-sm-6 col-lg-3">
                     <input
