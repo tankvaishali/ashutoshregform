@@ -30,23 +30,23 @@ function Logindoc() {
 
     return (
         <>
-            <div className="container-fluid bg">
-                <div className='row align-items-center justify-content-center vh-100'>
-                    <Form className='col-lg-8 col-md-9 col-sm-10 col-11'>
-                        <div className="container ms-4 mb-4">
-                            <Link to={"/DataTable"}>
-                                <div className='text-start mt-4'>
-                                    <button type='button' className='btn btn-dark fw-medium pb-2'><FaArrowLeftLong /></button>
-                                </div>
-                            </Link>
+            <div className="container-fluid bg vh-100" >
+                <div className="container mb-4 pt-4">
+                    <Link to={"/DataTable"}>
+                        <div className='text-start'>
+                            <button type='button' className='btn btn-dark fw-medium pb-2'><FaArrowLeftLong /></button>
                         </div>
+                    </Link>
+                </div>
+                <div className='row align-items-center justify-content-center mt-5 pt-5'>
+                    <Form className='col-lg-8 col-11'>
                         <div className='row align-items-center justify-content-evenly'>
-                            <div className="col-sm-6 col-11 p-0 row align-items-center justify-content-center">
+                            <div className="col-md-6 col-11 p-0 row align-items-center justify-content-center">
                                 <div className='col-sm-9 col-10 m-5'>
                                     <img src={require('../assets/image/Ashutosh2.png')} alt="" className='img-fluid p-2 bg2' />
                                 </div>
                             </div>
-                            <div className="col-sm-6 col-11 p-0 row align-items-center justify-content-end">
+                            <div className="col-md-6 col-11 p-0 row align-items-center justify-content-end">
                                 <div className="p-0">
                                     <Form.Label>Only For Doctor's</Form.Label>
                                     <Form.Group className="mb-3" controlId="formBasicDate">

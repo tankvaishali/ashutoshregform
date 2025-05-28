@@ -802,7 +802,7 @@ function Mainsection() {
                                         onChange={(e) => handleDoctorInputChange(e)}
                                         placeholder="Select or type Doctor"
                                     />
-                                    <datalist id="doctor-options">
+                                    <datalist id="doctor-options" className='custom-select'>
                                         {options3.map((option, index) => (
                                             <option key={index} value={option.value}>{option.label}</option>
                                         ))}

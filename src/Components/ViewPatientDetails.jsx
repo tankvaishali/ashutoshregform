@@ -245,7 +245,7 @@ function ViewPatientDetails() {
                 <Card.Header as="h5" className="text-center display-6">
                   Patient's Personal Details
                 </Card.Header>
-                <Card.Body>
+                <Card.Body className="p-md-3 p-0">
                   <div className="row justify-content-center align-items-center pb-3">
                     <div className="col-md-6 col-11">
                       <div className="row justify-content-center">
@@ -258,16 +258,15 @@ function ViewPatientDetails() {
                         </div>
                       </div>
                     </div>
-                    <div className="col-md-6 col-11">
+                    <div className="col-md-6 col-12">
                       <div className="my-3 row justify-content-md-between justify-content-center">
-                        <div className="col-10 shadow-lg p-3 bg-body-none rounded">
+                        <div className="col-10 shadow-lg p-0 bg-body-none rounded p-0 p-md-3">
                           <div className="text-end">
                             <BiEdit onClick={EDitDiog} className="text-center" />
                           </div>
                           <div className="fs-6 fw-normal p-2 text-end">
                             <strong>Entry Date:</strong> {formattedDate}
                           </div>
-                          <h1 className="fw-normal p-2 text-capitalize"></h1>
                           <div className="fs-6 fw-normal p-2 row align-items-center justify-content-start">
                             <MdOutlineAlternateEmail className="col-sm-2 col-3" />
                             <div className="col-9">{selectedData.email}</div>
@@ -316,16 +315,16 @@ function ViewPatientDetails() {
                               )}
                             </div>
                           </div>
-                          <div className="row align-items-center justify-content-evenly">
-                            <div className="col-4 fs-6 fw-normal p-2 text-capitalize">
+                          <div className="row align-items-center justify-content-center pb-3">
+                            <div className="col-3 fs-6 fw-normal p-0 text-capitalize">
                               <BiMaleFemale className="col-4" />
                               {selectedData.gender_identity}
                             </div>
-                            <div className="col-4 fs-6 fw-normal p-2 text-capitalize">
+                            <div className="col-4 fs-6 fw-normal p-0 text-capitalize">
                               <MdBloodtype className="col-4" />
                               {selectedData.blood_group}(positive)
                             </div>
-                            <div className="col-4 fs-6 fw-normal p-2 text-capitalize">
+                            <div className="col-4 fs-6 fw-normal p-0 text-capitalize">
                               <FaBirthdayCake className="col-4" />
                               {selectedData.age} years
                             </div>
