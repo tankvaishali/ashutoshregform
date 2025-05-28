@@ -596,7 +596,7 @@ function Mainsection() {
 
                         {/* age */}
                         <div className='row align-items-center justify-content-center'>
-                            <Form.Group className='mb-3 col-sm-6 col-11 p-1'>
+                            <Form.Group className='mb-3 mt-2 col-sm-6 col-11 p-1'>
                                 <Form.Label>Age</Form.Label>
                                 <Form.Control
                                     type="number"

@@ -2,7 +2,6 @@
   "name": "ashutoshregform",
   "version": "0.1.0",
   "private": true,
-  "homepage": "./",
   "dependencies": {
     "@emotion/cache": "^11.14.0",
     "@emotion/react": "^11.14.0",
@@ -31,26 +30,11 @@
     "web-vitals": "^2.1.4",
     "xlsx": "^0.18.5"
   },
-  "main": "public/electron.js",
-  "build": {
-    "appId": "com.example.reactapp",
-    "productName": "ReactElectronApp",
-    "files": [
-      "build/**/*",
-      "public/electron.js"
-    ],
-    "directories": {
-      "buildResources": "assets"
-    },
-    "win": {
-      "target": "nsis"
-    }
-  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "electron": "electron .",
-    "dist": "electron-builder"
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": [
@@ -69,9 +53,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "electron": "^36.3.1",
-    "electron-builder": "^26.0.12"
   }
 }
