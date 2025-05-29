@@ -30,9 +30,25 @@
     "web-vitals": "^2.1.4",
     "xlsx": "^0.18.5"
   },
+  "main": "public/electron.js",
+  "build": {
+    "appId": "com.yourapp.id",
+    "productName": "AshutoshRegForm",
+    "files": [
+      "public/electron.js"
+    ],
+    "directories": {
+      "buildResources": "assets"
+    },
+    "win": {
+      "target": "nsis"
+    }
+  },
   "scripts": {
     "start": "react-scripts start",
+    "electron-start": "electron .",
     "build": "react-scripts build",
+    "dist": "npm run build && electron-builder",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -53,5 +69,11 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "electron": "^36.3.2",
+    "electron-builder": "^26.0.12",
+    "wait-on": "^8.0.3"
   }
 }
