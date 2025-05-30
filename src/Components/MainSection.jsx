@@ -417,11 +417,38 @@ function Mainsection() {
             newErrormsg.Hospital = "Please it's required";
         }
 
+        // if (isValid && Object.keys(newErrormsg).length === 0) {
+        //     await ApiCall()
+        //     setArray(prevArray => [...prevArray, patientInfo]);
+        //     setDisplay(true);
+
+        // } else {
+        //     seterrormsg(newErrormsg);
+        //     setDisplay(false);
+        // }
+
         if (isValid && Object.keys(newErrormsg).length === 0) {
-            await ApiCall()
+
+            // 🔍 Check if Doctor is new
+            const isNewDoctor = !DoctorName.some(doc => doc.name.toLowerCase() === patientInfo.Doctor.toLowerCase());
+
+            if (isNewDoctor && patientInfo.Doctor.trim() !== '') {
+                try {
+                    await axios.post('https://aashutosh-node-backend.onrender.com/add-doctor', {
+                        name: patientInfo.Doctor.trim()
+                    });
+                    // Optional: refresh doctor list
+                    const updated = await axios.get('https://aashutosh-node-backend.onrender.com/doctor');
+                    setDoctor(updated.data);
+                } catch (error) {
+                    console.error("Failed to add doctor:", error);
+                }
+            }
+
+            await ApiCall();  // 🚀 Submit the full patient data
+
             setArray(prevArray => [...prevArray, patientInfo]);
             setDisplay(true);
-
         } else {
             seterrormsg(newErrormsg);
             setDisplay(false);
@@ -763,33 +790,10 @@ function Mainsection() {
 
                         {/* Ref. Doctor */}
                         <div className='row align-items-center justify-content-center'>
-                            {/* <Form.Group className="mb-3 col-sm-6 col-11 p-1" controlId="formBasicDiagnose">
-                                <Form.Label>Ref. Doctor</Form.Label>
-                                <InputGroup>
-                                    <InputGroup.Text id="basic-addon1">
-                                        <FaUserMd />
-                                    </InputGroup.Text>
-                                    <input
-                                        list="doctor-options"
-                                        className="form-control p-1 py-3 fs-6 rounded-end"
-                                        name="diagnosis"
-                                        value={patientInfo.Doctor}
-                                        onChange={(e) => handleDoctorInputChange(e)}
-                                        placeholder="Select or type Doctor"
-                                    />
-                                    <datalist id="doctor-options" className='custom-select'>
-                                        {options3.map((option, index) => (
-                                            <option key={index} value={option.value}>{option.label}</option>
-                                        ))}
-                                    </datalist>
-                                </InputGroup>
-                                <div className={errormsg ? "span1 text-danger fs-6" : "span2"}>{errormsg.Doctor}</div>
-                            </Form.Group> */}
-
                             <Form.Group className="mb-3 col-sm-6 col-11 p-1" controlId="formBasicDiagnose">
                                 <Form.Label>Ref. Doctor</Form.Label>
                                 <InputGroup>
-                                  <InputGroup.Text id="basic-addon1">    
+                                    <InputGroup.Text id="basic-addon1">
                                         <FaUserMd />
                                     </InputGroup.Text>
                                     <div className="flex-grow-1">
