@@ -26,13 +26,22 @@ function DataTable() {
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     setLoading(true);
-    axios
-      .get("https://aashutosh-node-backend.onrender.com/getpatient")
-      .then((response) => setData(response.data))
-      .catch((error) => console.error("Error fetching data:", error))
-      .finally(() => setLoading(false));
-    console.log(data);
+  }, []);
 
+  useEffect(() => {
+    const GetTable = async () => {
+      try {
+        const response = await axios.get("https://aashutosh-node-backend.onrender.com/getpatient");
+        setData(response.data);
+        console.log(response.data); // Log data after it is fetched
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    GetTable();
   }, []);
 
   const columns = [

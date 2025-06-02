@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import '../assets/CSS/MainSection.css';
 import { Form, Button, InputGroup, FormControl, FormGroup, Row, Col } from 'react-bootstrap';
 import { IoMail } from 'react-icons/io5';
@@ -8,7 +8,6 @@ import { CiStethoscope } from 'react-icons/ci';
 import { FaHospital, FaPrint, FaUserMd, } from 'react-icons/fa';
 import { FaArrowLeftLong } from "react-icons/fa6";
 import axios from 'axios';
-import Select from 'react-select';
 import { MdAir } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 import CreatableSelect from 'react-select/creatable';
@@ -497,7 +496,6 @@ function Mainsection() {
         printPatientInfo();
     }
     // Option API
-    const server = process.env.REACT_APP_BASE_URL
     useEffect(() => {
 
         //Devices_Data
@@ -547,9 +545,7 @@ function Mainsection() {
 
     }, []);
 
-    const handleReset = () => {
-        // window.location.reload();
-    }
+
 
 
     return (
@@ -833,7 +829,7 @@ function Mainsection() {
 
                         <div className='row align-items-center justify-content-evenly'>
                             {/* {display === true ?
-                                <Button variant="dark" type="" onClick={handleReset} className="w-25 p-3 shadowon">Reset Form<GrPowerReset /></Button>
+                                <Button variant="dark" type="" onClick={handleReset} className="w-25 p-3 shadowon">Reset Form<FcRefresh /></Button>
                                 : */}
                             <Button variant="dark" type="submit" className="w-25 p-3 shadowon">Submit</Button>
                             {/* } */}

@@ -13,7 +13,6 @@ import { FaArrowLeftLong } from "react-icons/fa6"
 
 function ViewPatientDetails() {
   const dataId = localStorage.getItem("ViewPatientDetails")
-  const server = process.env.REACT_APP_BASE_URL
   const [State, setState] = useState([])
   const [Payment, setPayment] = useState([])
   const [EditD, setEditd] = useState(false)
@@ -40,7 +39,7 @@ function ViewPatientDetails() {
       .catch((error) => console.error(error))
       .finally(() => setLoading(false))
 
-    getdata()
+
     DiognoseName()
     DeviceName()
   }, [dataId])
@@ -57,6 +56,10 @@ function ViewPatientDetails() {
         console.error(error)
       })
   }
+
+  useEffect(() => {
+    getdata()
+  })
 
   const selectedData = State
 
