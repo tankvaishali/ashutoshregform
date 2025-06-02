@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import '../assets/CSS/MainSection.css';
 import { Form, Button, InputGroup, FormControl, FormGroup, Row, Col } from 'react-bootstrap';
 import { IoMail } from 'react-icons/io5';
@@ -8,7 +8,6 @@ import { CiStethoscope } from 'react-icons/ci';
 import { FaHospital, FaPrint, FaUserMd, } from 'react-icons/fa';
 import { FaArrowLeftLong } from "react-icons/fa6";
 import axios from 'axios';
-import Select from 'react-select';
 import { MdAir } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 import CreatableSelect from 'react-select/creatable';
@@ -59,18 +58,14 @@ function Mainsection() {
 
         if (name === "name.middle_name" || name === "name.last_name") {
             if (!value?.trim()) {
-                // If the field is empty, don't set an error immediately, as one of the two is required
                 delete newErrors[name];
             } else if (!/^[a-zA-Z]+$/.test(value)) {
-                // If filled but incorrect (not alphabetical), set an error
                 newErrors[name] = "Only alphabetic characters are allowed.";
             } else {
-                // If the input is correct, clear the error
                 delete newErrors[name];
             }
         }
 
-        // Check that at least one of the fields is correctly filled
         const otherField = name === "name.middle_name" ? "name.last_name" : "name.middle_name";
         if (patientInfo[otherField]?.trim() || value?.trim()) {
             if ((patientInfo[otherField]?.trim() && !newErrors[otherField]) || (!newErrors[name] && value?.trim())) {
@@ -78,10 +73,6 @@ function Mainsection() {
                 delete newErrors["name.last_name"];
             }
         }
-        // else {
-        //     newErrors["name.middle_name"] = "Either Middle name or Last name is required";
-        //     newErrors["name.last_name"] = "Either Middle name or Last name is required";
-        // }
 
         seterrormsg(newErrors);
         switch (name) {
@@ -202,21 +193,6 @@ function Mainsection() {
             city: e.target.value
         }));
     };
-
-    const [inputValue, setInputValue] = useState('');
-    // OnInputChange
-    const handleInputChange = newValue => {
-        setInputValue(newValue);
-    };
-    const handleInputChange1 = newValue => {
-        setInputValue(newValue);
-    };
-    const handleInputChange2 = newValue => {
-        setInputValue(newValue);
-    };
-    const handleInputChange3 = newValue => {
-        setInputValue(newValue);
-    };
     const handleDoctorInputChange = (e) => {
         const value = e.target.value;
         setPatientInfo(prev => ({
@@ -231,61 +207,40 @@ function Mainsection() {
         }
     };
 
-    // OnChange={handleDiagnosisChange} 
-    const handleDiagnosisChange = selectedOption => {
-        const newValues = {
-            ...patientInfo,
-            diagnosis: selectedOption ? selectedOption.value : ''
-        };
-        setPatientInfo(newValues);
+    const handleDiagnosisInputChange = async (e) => {
+        const value = e.target.value;
+        setPatientInfo(prev => ({ ...prev, diagnosis: value }));
 
         const newErrors = { ...errormsg };
-        if (selectedOption) {
+        if (value) {
             delete newErrors.diagnosis;
             seterrormsg(newErrors);
         }
+
     };
 
-    const handleDeviceChange = selectedOption => {
-        const newValues = {
-            ...patientInfo,
-            devices: selectedOption ? selectedOption.value : ''
-        };
-        setPatientInfo(newValues);
+    const handleDeviceInputChange = async (e) => {
+        const value = e.target.value;
+        setPatientInfo(prev => ({ ...prev, devices: value }));
 
         const newErrors = { ...errormsg };
-        if (selectedOption) {
+        if (value) {
             delete newErrors.devices;
             seterrormsg(newErrors);
         }
+
     };
 
-    const handleDoctorChange = selectedOption => {
-        const newValues = {
-            ...patientInfo,
-            Doctor: selectedOption ? selectedOption.value : ''
-        };
-        setPatientInfo(newValues);
+    const handleHospitalInputChange = async (e) => {
+        const value = e.target.value;
+        setPatientInfo(prev => ({ ...prev, Hospital: value }));
 
         const newErrors = { ...errormsg };
-        if (selectedOption) {
-            delete newErrors.Doctor;
-            seterrormsg(newErrors);
-        }
-    };
-
-    const handleHospitalChange = selectedOption => {
-        const newValues = {
-            ...patientInfo,
-            Hospital: selectedOption ? selectedOption.value : ''
-        };
-        setPatientInfo(newValues);
-
-        const newErrors = { ...errormsg };
-        if (selectedOption) {
+        if (value) {
             delete newErrors.Hospital;
             seterrormsg(newErrors);
         }
+
     };
 
     const options = array.map((diagnosis) => ({
@@ -417,11 +372,63 @@ function Mainsection() {
             newErrormsg.Hospital = "Please it's required";
         }
 
+        /* doctors data add in backend */
         if (isValid && Object.keys(newErrormsg).length === 0) {
-            await ApiCall()
+
+            const isNewDoctor = !DoctorName.some(doc => doc.name.toLowerCase() === patientInfo.Doctor.toLowerCase());
+            if (isNewDoctor && patientInfo.Doctor.trim() !== '') {
+                try {
+                    await axios.post('https://aashutosh-node-backend.onrender.com/add-doctor', {
+                        name: patientInfo.Doctor.trim()
+                    });
+                    const updated = await axios.get('https://aashutosh-node-backend.onrender.com/doctor');
+                    setDoctor(updated.data);
+                } catch (error) {
+                    console.error("Failed to add doctor:", error);
+                }
+            }
+
+            const isNewHospital = !Hospital.some(item => item.name.toLowerCase() === patientInfo.Hospital.toLowerCase());
+            if (isNewHospital && patientInfo.Hospital.trim() !== '') {
+                try {
+                    await axios.post('https://aashutosh-node-backend.onrender.com/add-hospital', {
+                        name: patientInfo.Hospital.trim()
+                    });
+                    const updated = await axios.get('https://aashutosh-node-backend.onrender.com/hospital');
+                    setHospital(updated.data);
+                } catch (error) {
+                    console.error("Failed to add hospital:", error);
+                }
+            }
+
+            const isNewDiagnosis = !array.some(item => item.diagnosis_name.toLowerCase() === patientInfo.diagnosis.toLowerCase());
+            if (isNewDiagnosis && patientInfo.diagnosis.trim() !== '') {
+                try {
+                    await axios.post('https://aashutosh-node-backend.onrender.com/add-diagnosis', {
+                        diagnosis_name: patientInfo.diagnosis.trim()
+                    });
+                    const updated = await axios.get('https://aashutosh-node-backend.onrender.com/diagnosis');
+                    setArray(updated.data);
+                } catch (error) {
+                    console.error("Failed to add diagnosis:", error);
+                }
+            }
+
+            const isNewDevice = !Device.some(item => item.device_name.toLowerCase() === patientInfo.devices.toLowerCase());
+            if (isNewDevice && patientInfo.devices.trim() !== '') {
+                try {
+                    await axios.post('https://aashutosh-node-backend.onrender.com/add-devices', {
+                        device_name: patientInfo.devices.trim()
+                    });
+                    const updated = await axios.get('https://aashutosh-node-backend.onrender.com/devices');
+                    setDevice(updated.data);
+                } catch (error) {
+                    console.error("Failed to add device:", error);
+                }
+            }
+            await ApiCall();
             setArray(prevArray => [...prevArray, patientInfo]);
             setDisplay(true);
-
         } else {
             seterrormsg(newErrormsg);
             setDisplay(false);
@@ -489,7 +496,6 @@ function Mainsection() {
         printPatientInfo();
     }
     // Option API
-    const server = process.env.REACT_APP_BASE_URL
     useEffect(() => {
 
         //Devices_Data
@@ -539,9 +545,7 @@ function Mainsection() {
 
     }, []);
 
-    const handleReset = () => {
-        // window.location.reload();
-    }
+
 
 
     return (
@@ -609,7 +613,7 @@ function Mainsection() {
                                 <div className={errormsg ? "span1 text-danger fs-6" : "span2"}>{errormsg.age}</div>
                             </Form.Group>
                             <Form.Group className="mb-3 col-sm-6 col-11 p-1" controlId="formBasicBloodGroup">
-                                <Form.Label>Blood Group</Form.Label>
+                                <Form.Label>Blood Group(Optional)</Form.Label>
                                 <InputGroup>
                                     <InputGroup.Text id="basic-addon1"><BsDropletHalf /></InputGroup.Text>
                                     <Form.Control as="select" name="bloodGroup" value={patientInfo.bloodGroup || ''} onChange={handleChange} className="custom-select p-3 placehold">
@@ -621,6 +625,7 @@ function Mainsection() {
                             </Form.Group>
                         </div>
 
+                        {/* address */}
                         <div className='row align-items-center justify-content-center'>
                             <FormGroup className="mb-3 p-sm-0 p-3 col-sm-12" controlId="formBasicBloodGroup">
                                 <Form.Label className='ms-sm-0 ms-3'>Address</Form.Label>
@@ -690,7 +695,7 @@ function Mainsection() {
                                         <Col xs={6} md={6} lg={6}>
                                             <FormControl
                                                 className='p-3 mt-sm-2 mt-2 mt-sm-4 placehold'
-                                                placeholder="Zipcode"
+                                                placeholder="Zipcode (Optional)"
                                                 name="Zipcode"
                                                 value={patientInfo.Zipcode}
                                                 onChange={handleChange}
@@ -721,127 +726,83 @@ function Mainsection() {
                             </Form.Group>
                         </div>
 
-                        {/* Diagnosis */}
                         <div className='row align-items-center justify-content-center'>
+                            {/* Diagnosis */}
                             <Form.Group className="mb-3 col-sm-6 col-11 p-1" controlId="formBasicDiagnose">
                                 <Form.Label>Diagnosis</Form.Label>
-                                <InputGroup>
+                                <InputGroup className='flex-nowrap'>
                                     <InputGroup.Text id="basic-addon1"><CiStethoscope /></InputGroup.Text>
-                                    <Select
-                                        name='diagnosis'
-                                        className="flex-grow-1 custom-select p-1 placehold col fs-6 rounded-end"
-                                        value={options.find(option => option.value === patientInfo.diagnosis)}
-                                        onChange={handleDiagnosisChange}
-                                        onInputChange={handleInputChange}
-                                        isClearable
-                                        isSearchable
-                                        options={options}
-                                        placeholder="Select Diagnosis"
-                                    />
+                                    <div className="flex-grow-1">
+                                        <CreatableSelect
+                                            className='flex-grow-1 custom-select p-1 placehold col fs-6 rounded-end bg-transparent'
+                                            options={options}
+                                            value={options.find(opt => opt.value === patientInfo.diagnosis) || (patientInfo.diagnosis ? { label: patientInfo.diagnosis, value: patientInfo.diagnosis } : null)}
+                                            onChange={(selected) => { handleDiagnosisInputChange({ target: { name: 'diagnosis', value: selected ? selected.value : '' } }); }}
+                                            onCreateOption={(inputValue) => { handleDiagnosisInputChange({ target: { name: 'diagnosis', value: inputValue } }); }}
+                                            isClearable placeholder="Search or Type Diagnosis"
+                                        />
+                                    </div>
                                 </InputGroup>
                                 <div className={errormsg ? "span1 text-danger fs-6" : "span2"}>{errormsg.diagnosis}</div>
                             </Form.Group>
+
+                            {/* Devices */}
                             <Form.Group className="mb-3 col-sm-6 col-11 p-1" controlId="formBasicDevices">
                                 <Form.Label>Devices</Form.Label>
-                                <InputGroup>
+                                <InputGroup className='flex-nowrap'>
                                     <InputGroup.Text id="basic-addon2"><MdAir /></InputGroup.Text>
-                                    <Select
-                                        name='devices'
-                                        className="flex-grow-1 custom-select p-1 placehold col fs-6 rounded-end"
-                                        value={options1.find(option => option.value === patientInfo.devices)}
-                                        onChange={handleDeviceChange}
-                                        onInputChange={handleInputChange1}
-                                        options={options1}
-                                        placeholder="Select Devices"
-                                        isClearable
-                                        isSearchable
-                                    />
+                                    <div className="flex-grow-1">
+                                        <CreatableSelect
+                                            className='flex-grow-1 custom-select p-1 placehold col fs-6 rounded-end bg-transparent'
+                                            options={options1}
+                                            value={options1.find(opt => opt.value === patientInfo.devices) || (patientInfo.devices ? { label: patientInfo.devices, value: patientInfo.devices } : null)}
+                                            onChange={(selected) => { handleDeviceInputChange({ target: { name: 'devices', value: selected ? selected.value : '' } }); }}
+                                            onCreateOption={(inputValue) => { handleDeviceInputChange({ target: { name: 'devices', value: inputValue } }); }}
+                                            isClearable placeholder="Search or Type Device" />
+                                    </div>
                                 </InputGroup>
                                 <div className={errormsg ? "span1 text-danger fs-6" : "span2"}>{errormsg.devices}</div>
                             </Form.Group>
                         </div>
 
-                        {/* Ref. Doctor */}
                         <div className='row align-items-center justify-content-center'>
-                            {/* <Form.Group className="mb-3 col-sm-6 col-11 p-1" controlId="formBasicDiagnose">
-                                <Form.Label>Ref. Doctor</Form.Label>
-                                <InputGroup>
-                                    <InputGroup.Text id="basic-addon1">
-                                        <FaUserMd />
-                                    </InputGroup.Text>
-                                    <input
-                                        list="doctor-options"
-                                        className="form-control p-1 py-3 fs-6 rounded-end"
-                                        name="diagnosis"
-                                        value={patientInfo.Doctor}
-                                        onChange={(e) => handleDoctorInputChange(e)}
-                                        placeholder="Select or type Doctor"
-                                    />
-                                    <datalist id="doctor-options" className='custom-select'>
-                                        {options3.map((option, index) => (
-                                            <option key={index} value={option.value}>{option.label}</option>
-                                        ))}
-                                    </datalist>
-                                </InputGroup>
-                                <div className={errormsg ? "span1 text-danger fs-6" : "span2"}>{errormsg.Doctor}</div>
-                            </Form.Group> */}
 
+                            {/* Ref. Doctor */}
                             <Form.Group className="mb-3 col-sm-6 col-11 p-1" controlId="formBasicDiagnose">
                                 <Form.Label>Ref. Doctor</Form.Label>
-                                <InputGroup>
-                                  <InputGroup.Text id="basic-addon1">    
+                                <InputGroup className='flex-nowrap'>
+                                    <InputGroup.Text id="basic-addon1">
                                         <FaUserMd />
                                     </InputGroup.Text>
                                     <div className="flex-grow-1">
                                         <CreatableSelect
                                             className='flex-grow-1 custom-select p-1 placehold col fs-6 rounded-end bg-transparent'
                                             options={options3}
-                                            value={
-                                                // If typed value exists in options, select that option, else create a temporary option
-                                                options3.find(opt => opt.value === patientInfo.Doctor) ||
-                                                (patientInfo.Doctor ? { label: patientInfo.Doctor, value: patientInfo.Doctor } : null)
-                                            }
-                                            onChange={(selected) => {
-                                                // selected can be null if cleared
-                                                handleDoctorInputChange({ target: { name: 'diagnosis', value: selected ? selected.value : '' } });
-                                            }}
-                                            onCreateOption={(inputValue) => {
-                                                // When user types a new value and hits enter or blurs
-                                                handleDoctorInputChange({ target: { name: 'diagnosis', value: inputValue } });
-                                            }}
-                                            isClearable
-                                            styles={{
-                                                option: (base, { isFocused }) => ({
-                                                    ...base,
-                                                    backgroundColor: isFocused ? '#d0f0ff' : '#fff',
-                                                    color: '#000',
-                                                }),
-                                                control: (base) => ({
-                                                    ...base,
-                                                    minHeight: '40px',
-                                                }),
-                                            }}
-                                            placeholder="Search Or Type Doctor Name"
+                                            value={options3.find(opt => opt.value === patientInfo.Doctor) || (patientInfo.Doctor ? { label: patientInfo.Doctor, value: patientInfo.Doctor } : null)}
+                                            onChange={(selected) => { handleDoctorInputChange({ target: { name: 'diagnosis', value: selected ? selected.value : '' } }); }}
+                                            onCreateOption={(inputValue) => { handleDoctorInputChange({ target: { name: 'diagnosis', value: inputValue } }); }}
+                                            isClearable placeholder="Search Or Type Doctor Name"
+                                            styles={{ option: (base, { isFocused }) => ({ ...base, backgroundColor: isFocused ? '#d0f0ff' : '#fff', color: '#000', }), control: (base) => ({ ...base, minHeight: '40px', }), }}
                                         />
                                     </div>
                                 </InputGroup>
                                 <div className={errormsg ? "span1 text-danger fs-6" : "span2"}>{errormsg.Doctor}</div>
                             </Form.Group>
-                            <Form.Group className="mb-3 col-sm-6 col-11 p-1" controlId="formBasicDevices">
+
+                            {/* Hospital */}
+                            <Form.Group className="mb-3 col-sm-6 col-11 p-1" controlId="formBasicHospital">
                                 <Form.Label>Ref. Hospital</Form.Label>
-                                <InputGroup>
+                                <InputGroup className='flex-nowrap'>
                                     <InputGroup.Text id="basic-addon1"><FaHospital /></InputGroup.Text>
-                                    <Select
-                                        name='diagnosis'
-                                        className="flex-grow-1 custom-select p-1 placehold col fs-6 rounded-end"
-                                        value={options4.find(option => option.value === patientInfo.Hospital)}
-                                        onChange={handleHospitalChange}
-                                        onInputChange={handleInputChange3}
-                                        isClearable
-                                        isSearchable
-                                        options={options4}
-                                        placeholder="Select Hospital"
-                                    />
+                                    <div className="flex-grow-1">
+                                        <CreatableSelect
+                                            className='flex-grow-1 custom-select p-1 placehold col fs-6 rounded-end bg-transparent'
+                                            options={options4}
+                                            value={options4.find(opt => opt.value === patientInfo.Hospital) || (patientInfo.Hospital ? { label: patientInfo.Hospital, value: patientInfo.Hospital } : null)}
+                                            onChange={(selected) => { handleHospitalInputChange({ target: { name: 'Hospital', value: selected ? selected.value : '' } }); }}
+                                            onCreateOption={(inputValue) => { handleHospitalInputChange({ target: { name: 'Hospital', value: inputValue } }); }}
+                                            isClearable placeholder="Search or Type Hospital" />
+                                    </div>
                                 </InputGroup>
                                 <div className={errormsg ? "span1 text-danger fs-6" : "span2"}>{errormsg.Hospital}</div>
                             </Form.Group>
@@ -868,7 +829,7 @@ function Mainsection() {
 
                         <div className='row align-items-center justify-content-evenly'>
                             {/* {display === true ?
-                                <Button variant="dark" type="" onClick={handleReset} className="w-25 p-3 shadowon">Reset Form<GrPowerReset /></Button>
+                                <Button variant="dark" type="" onClick={handleReset} className="w-25 p-3 shadowon">Reset Form<FcRefresh /></Button>
                                 : */}
                             <Button variant="dark" type="submit" className="w-25 p-3 shadowon">Submit</Button>
                             {/* } */}
