@@ -33,7 +33,7 @@
   "main": "public/electron.js",
   "build": {
     "appId": "com.yourapp.id",
-    "productName": "AshutoshRegForm",
+    "productName": "AshutoshFormApp",
     "files": [
       "public/electron.js"
     ],
@@ -48,9 +48,7 @@
     "start": "react-scripts start",
     "electron-start": "electron .",
     "build": "react-scripts build",
-    "dist": "npm run build && electron-builder",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "dist": "electron-builder"
   },
   "eslintConfig": {
     "extends": [
