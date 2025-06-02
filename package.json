@@ -2,6 +2,7 @@
   "name": "ashutoshregform",
   "version": "0.1.0",
   "private": true,
+  "homepage": "./",
   "dependencies": {
     "@emotion/cache": "^11.14.0",
     "@emotion/react": "^11.14.0",
@@ -32,23 +33,24 @@
   },
   "main": "public/electron.js",
   "build": {
-    "appId": "com.yourapp.id",
-    "productName": "AshutoshFormApp",
-    "files": [
-      "public/electron.js"
-    ],
+    "appId": "com.ashutosh.electron",
+    "productName": "Ashutosh Prosthetics & Orthotics Center",
     "directories": {
       "buildResources": "assets"
     },
-    "win": {
-      "target": "nsis"
+    "files": [
+      "build/**/*",
+      "public/electron.js"
+    ],
+    "extraMetadata": {
+      "main": "public/electron.js"
     }
   },
   "scripts": {
     "start": "react-scripts start",
-    "electron-start": "electron .",
     "build": "react-scripts build",
-    "dist": "electron-builder"
+    "electron-start": "electron .",
+    "dist": "npm run build && electron-builder"
   },
   "eslintConfig": {
     "extends": [
