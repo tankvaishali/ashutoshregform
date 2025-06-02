@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Form, InputGroup } from 'react-bootstrap';
 import { BsDropletHalf } from 'react-icons/bs';
-import { useNavigate } from 'react-router-dom';
+import { FaArrowLeftLong } from 'react-icons/fa6';
+import { Link, useNavigate } from 'react-router-dom';
 
 function DateNow() {
     const [patientInfo, setPatientInfo] = useState({
@@ -30,6 +31,11 @@ function DateNow() {
     }
     return (
         <div className="container-fluid bg">
+            <Link to={"/"}>
+                <div className='text-start'>
+                    <button type='button' className='btn btn-dark fw-medium pb-2'><FaArrowLeftLong /></button>
+                </div>
+            </Link>
             <div className='row align-items-center justify-content-center vh-100'>
                 <Form className='col-lg-8 col-md-9 col-sm-10 col-11'>
                     <div className='row align-items-center justify-content-evenly'>
