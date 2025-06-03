@@ -36,6 +36,7 @@
   "build": {
     "appId": "com.ashutosh.electron",
     "productName": "Ashutosh Prosthetics & Orthotics Center",
+    "icon": "assetsImage/Ashutosh2.ico",
     "directories": {
       "buildResources": "assets"
     },
