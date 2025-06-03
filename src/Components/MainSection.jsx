@@ -16,7 +16,7 @@ function Mainsection() {
 
     const [patientInfo, setPatientInfo] = useState({
         id: Date.now(), name: { Title: '', first_name: '', middle_name: '', last_name: '', },
-        street: '', city: '', state: '', country: '', Zipcode: '', age: '', bloodGroup: '', phone_number: '', email: '', diagnosis: '', devices: '',
+        street: '', city: '', state: '', country: 'india', Zipcode: '', age: '', bloodGroup: '', phone_number: '', email: '', diagnosis: '', devices: '',
         Hospital: '', Doctor: '', totalBill: '', paidAmount: '', entryDate: new Date().toISOString().substring(0, 10) // Today's date in YYYY-MM-DD format
     });
     const [array, setArray] = useState([])
@@ -688,7 +688,8 @@ function Mainsection() {
                                                 className='p-3 mt-sm-2 mt-2 mt-sm-4 placehold'
                                                 placeholder="Country"
                                                 name="country"
-                                                value={patientInfo.country}
+                                                value="india"
+                                                disabled
                                                 onChange={handleChange}
                                             />
                                         </Col>
