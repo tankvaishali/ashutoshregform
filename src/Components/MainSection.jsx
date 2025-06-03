@@ -11,6 +11,7 @@ import axios from 'axios';
 import { MdAir } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 import CreatableSelect from 'react-select/creatable';
+import Swal from 'sweetalert2';
 
 function Mainsection() {
 
@@ -298,11 +299,22 @@ function Mainsection() {
                 }
             })
                 .then(function (response) {
-                    console.log(response);
+                    Swal.fire({
+                        title: 'Success!',
+                        text: 'Patient data submitted successfully.',
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    });
+
                 })
                 .catch(function (error) {
                     console.log(error);
-                    alert("Phone number and E-mail already exist.");
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'Something went wrong while submitting.',
+                        icon: 'error',
+                        confirmButtonText: 'Try Again'
+                    });
                 });
         } catch (error) {
             console.log(error);
@@ -429,6 +441,7 @@ function Mainsection() {
             await ApiCall();
             setArray(prevArray => [...prevArray, patientInfo]);
             setDisplay(true);
+
         } else {
             seterrormsg(newErrormsg);
             setDisplay(false);
